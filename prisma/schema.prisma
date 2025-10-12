@@ -40,12 +40,16 @@ model Assessment {
   // Relation
   creator        User      @relation(fields: [created_by], references: [id])
 
-  @@map("Assessment") 
+  @@map("assessments") 
 }
 
 model User {
   id        Int        @id @default(autoincrement())
   name      String
   email     String     @unique
+  password  String
+  isActive   Boolean   @default(true) @map("is_active")  
   assessment Assessment[] 
+
+  @@map("users")
 }
