@@ -13,3 +13,40 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Status {
+  draft
+  active
+  completed
+  archived
+}
+
+model Assessment {
+  id             Int       @id @default(autoincrement())
+  title          String
+  description    String?   
+  address        String
+  city           String
+  province       String
+  latitude       Decimal?  @db.Decimal(10, 7)
+  longitude      Decimal?  @db.Decimal(10, 7)
+  map_points     Json?     
+  status         Status    @default(draft)
+  reference_code String?   @unique
+  created_by     Int
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  // Relation
+  creator        User      @relation(fields: [created_by], references: [id])
+
+  @@map("Assessment") 
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  assessment Assessment[] 
+}
