@@ -11,7 +11,7 @@ import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AssessmentService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   // ================= CREATE =================
   async create(dto: CreateAssessmentDto) {
@@ -31,8 +31,14 @@ export class AssessmentService {
         data: {
           ...dto,
           reference_code: referenceCode,
-          latitude: dto.latitude !== undefined ? new Prisma.Decimal(dto.latitude) : null,
-          longitude: dto.longitude !== undefined ? new Prisma.Decimal(dto.longitude) : null,
+          latitude:
+            dto.latitude !== undefined
+              ? new Prisma.Decimal(dto.latitude)
+              : null,
+          longitude:
+            dto.longitude !== undefined
+              ? new Prisma.Decimal(dto.longitude)
+              : null,
           status: dto.status ?? 'draft',
         },
       });
@@ -86,7 +92,9 @@ export class AssessmentService {
       // چک کن created_by معتبر باشه
       let newCreatedBy = existing.created_by;
       if (created_by && created_by !== existing.created_by) {
-        const user = await this.prisma.user.findUnique({ where: { id: created_by } });
+        const user = await this.prisma.user.findUnique({
+          where: { id: created_by },
+        });
         if (!user) {
           throw new BadRequestException('Invalid created_by user ID');
         }
@@ -97,8 +105,10 @@ export class AssessmentService {
         where: { id },
         data: {
           ...rest,
-          latitude: latitude !== undefined ? new Prisma.Decimal(latitude) : undefined,
-          longitude: longitude !== undefined ? new Prisma.Decimal(longitude) : undefined,
+          latitude:
+            latitude !== undefined ? new Prisma.Decimal(latitude) : undefined,
+          longitude:
+            longitude !== undefined ? new Prisma.Decimal(longitude) : undefined,
           reference_code: newReferenceCode,
           created_by: newCreatedBy,
         },

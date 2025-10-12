@@ -16,7 +16,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 @ApiTags('Assessments')
 @Controller('assessments')
 export class AssessmentController {
-  constructor(private readonly assessmentService: AssessmentService) { }
+  constructor(private readonly assessmentService: AssessmentService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new assessment' })
