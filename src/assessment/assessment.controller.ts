@@ -16,7 +16,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 @ApiTags('Assessments')
 @Controller('assessments')
 export class AssessmentController {
-  constructor(private readonly assessmentService: AssessmentService) {}
+  constructor(private readonly assessmentService: AssessmentService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new assessment' })
@@ -33,6 +33,11 @@ export class AssessmentController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a single assessment by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assessment retrieved successfully',
+    type: CreateAssessmentDto,
+  })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.assessmentService.findOne(id);
   }
