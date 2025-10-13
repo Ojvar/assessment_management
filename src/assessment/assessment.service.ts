@@ -16,7 +16,6 @@ export class AssessmentService {
   // ================= CREATE =================
   async create(dto: CreateAssessmentDto) {
     try {
-      // چک کن کاربر وجود داشته باشه
       const user = await this.prisma.user.findUnique({
         where: { id: dto.created_by },
       });
@@ -24,7 +23,6 @@ export class AssessmentService {
         throw new BadRequestException('Invalid created_by user ID');
       }
 
-      // اگه reference_code نفرستاده شد، خودش بساز
       const referenceCode = dto.reference_code ?? randomUUID();
 
       return await this.prisma.assessment.create({
@@ -77,7 +75,6 @@ export class AssessmentService {
     try {
       const { reference_code, latitude, longitude, created_by, ...rest } = dto;
 
-      // اگر reference_code تغییر کرده، قبلش بررسی کن که یکتا باشه
       let newReferenceCode = existing.reference_code;
       if (reference_code && reference_code !== existing.reference_code) {
         const exists = await this.prisma.assessment.findUnique({
@@ -89,7 +86,6 @@ export class AssessmentService {
         newReferenceCode = reference_code;
       }
 
-      // چک کن created_by معتبر باشه
       let newCreatedBy = existing.created_by;
       if (created_by && created_by !== existing.created_by) {
         const user = await this.prisma.user.findUnique({
