@@ -1,4 +1,3 @@
-// src/common/logger.ts
 import { createLogger, format, transports } from 'winston';
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston';
 import * as path from 'path';
