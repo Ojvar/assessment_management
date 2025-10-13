@@ -70,7 +70,6 @@ describe('AssessmentService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
-  // ================= CREATE =================
   describe('create', () => {
     it('should create an assessment successfully', async () => {
       const dto: CreateAssessmentDto = {
@@ -98,7 +97,6 @@ describe('AssessmentService', () => {
     });
   });
 
-  // ================= FIND ALL =================
   describe('findAll', () => {
     it('should return all assessments', async () => {
       const result = await service.findAll();
@@ -106,7 +104,6 @@ describe('AssessmentService', () => {
     });
   });
 
-  // ================= FIND ONE =================
   describe('findOne', () => {
     it('should return a single assessment', async () => {
       (prisma.assessment.findUnique as jest.Mock).mockResolvedValue({
@@ -123,11 +120,10 @@ describe('AssessmentService', () => {
     });
   });
 
-  // ================= UPDATE =================
   describe('update', () => {
     it('should update successfully', async () => {
       (prisma.assessment.findUnique as jest.Mock)
-        .mockResolvedValueOnce({ id: 1, reference_code: 'abc', created_by: 1 }) // existing
+        .mockResolvedValueOnce({ id: 1, reference_code: 'abc', created_by: 1 })
         .mockResolvedValueOnce(null); // check duplicate reference_code
 
       (prisma.assessment.update as jest.Mock).mockResolvedValue({ id: 1 });
@@ -144,7 +140,6 @@ describe('AssessmentService', () => {
     });
   });
 
-  // ================= REMOVE =================
   describe('remove', () => {
     it('should soft delete assessment', async () => {
       (prisma.assessment.findUnique as jest.Mock).mockResolvedValue({

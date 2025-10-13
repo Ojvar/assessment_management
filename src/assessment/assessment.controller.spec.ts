@@ -29,7 +29,10 @@ describe('AssessmentController', () => {
 
   it('should call service.create on create()', async () => {
     (service.create as jest.Mock).mockResolvedValue({ id: 1, title: 'Test' });
-    const result = await controller.create({ title: 'Test', created_by: 1 } as any);
+    const result = await controller.create({
+      title: 'Test',
+      created_by: 1,
+    } as any);
     expect(result).toEqual({ id: 1, title: 'Test' });
   });
 
@@ -46,7 +49,10 @@ describe('AssessmentController', () => {
   });
 
   it('should call service.update on update()', async () => {
-    (service.update as jest.Mock).mockResolvedValue({ id: 1, title: 'Updated' });
+    (service.update as jest.Mock).mockResolvedValue({
+      id: 1,
+      title: 'Updated',
+    });
     const result = await controller.update(1, { title: 'Updated' } as any);
     expect(result).toEqual({ id: 1, title: 'Updated' });
   });
