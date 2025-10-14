@@ -1,23 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
   ParseIntPipe,
+  Patch,
+  Post,
 } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AssessmentService } from './assessment.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Assessment } from '@prisma/client';
 
 @ApiTags('Assessments')
 @Controller('assessments')
 export class AssessmentController {
-  constructor(private readonly assessmentService: AssessmentService) {}
+  constructor(private readonly assessmentService: AssessmentService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new assessment' })

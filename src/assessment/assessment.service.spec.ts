@@ -1,12 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AssessmentService } from './assessment.service';
-import { PrismaService } from '../prisma/prisma.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+<<<<<<< HEAD
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { Status, Assessment, User } from '@prisma/client';
 
 jest.spyOn(console, 'error').mockImplementation(() => {}); // جلوگیری از لاگ اضافی
+=======
+import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaService } from '../prisma/prisma.service';
+import { AssessmentService } from './assessment.service';
+>>>>>>> 2cde43f (add: .vscode settings)
 
 describe('AssessmentService', () => {
   let service: AssessmentService;
