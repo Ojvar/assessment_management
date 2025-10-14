@@ -2,9 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Status } from '@prisma/client';
 import { AssessmentController } from './assessment.controller';
 import { AssessmentService } from './assessment.service';
+<<<<<<< HEAD
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
+=======
+>>>>>>> e7c83e7 (Squashed commit of the following:)
 
 describe('AssessmentController', () => {
   let controller: AssessmentController;
@@ -17,6 +20,7 @@ describe('AssessmentController', () => {
         {
           provide: AssessmentService,
           useValue: {
+<<<<<<< HEAD
             assessment: {},
             user: {},
             create: jest.fn((dto: CreateAssessmentDto) => ({
@@ -35,6 +39,13 @@ describe('AssessmentController', () => {
               ...dto,
             })),
             remove: jest.fn((id: number) => ({ id })),
+=======
+            create: jest.fn(),
+            findAll: jest.fn(),
+            findOne: jest.fn(),
+            update: jest.fn(),
+            remove: jest.fn(),
+>>>>>>> e7c83e7 (Squashed commit of the following:)
           },
         },
       ],
@@ -44,6 +55,7 @@ describe('AssessmentController', () => {
     service = module.get<AssessmentService>(AssessmentService);
   });
 
+<<<<<<< HEAD
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
@@ -55,6 +67,12 @@ describe('AssessmentController', () => {
 
     expect(await controller.create(dto)).toBe(result);
     expect(service.create).toHaveBeenCalledWith(dto);
+=======
+  it('should call service.create on create()', async () => {
+    (service.create as jest.Mock).mockResolvedValue({ id: 1, title: 'Test' });
+    const result = await controller.create({ title: 'Test', created_by: 1 } as any);
+    expect(result).toEqual({ id: 1, title: 'Test' });
+>>>>>>> e7c83e7 (Squashed commit of the following:)
   });
 
   it('should call service.findAll on findAll()', async () => {
@@ -70,9 +88,15 @@ describe('AssessmentController', () => {
   });
 
   it('should call service.update on update()', async () => {
+<<<<<<< HEAD
     (service.update as jest.Mock).mockResolvedValue({ id: 1 });
     const result = await controller.update(1, { name: 'updated' } as any);
     expect(result).toEqual({ id: 1 });
+=======
+    (service.update as jest.Mock).mockResolvedValue({ id: 1, title: 'Updated' });
+    const result = await controller.update(1, { title: 'Updated' } as any);
+    expect(result).toEqual({ id: 1, title: 'Updated' });
+>>>>>>> e7c83e7 (Squashed commit of the following:)
   });
 
   it('should call service.remove on remove()', async () => {
