@@ -1,15 +1,12 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { AssessmentService } from './assessment.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-<<<<<<< HEAD
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { Status, Assessment, User } from '@prisma/client';
 
-jest.spyOn(console, 'error').mockImplementation(() => {}); // جلوگیری از لاگ اضافی
-=======
-import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../prisma/prisma.service';
-import { AssessmentService } from './assessment.service';
->>>>>>> 2cde43f (add: .vscode settings)
+jest.spyOn(console, 'error').mockImplementation(() => { }); // جلوگیری از لاگ اضافی
 
 describe('AssessmentService', () => {
   let service: AssessmentService;
@@ -89,7 +86,7 @@ describe('AssessmentService', () => {
     });
 
     it('should throw BadRequestException if user is invalid', async () => {
-      (prisma.user.findUnique as jest.Mock).mockReturnValue(null);
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
       const dto: CreateAssessmentDto = {
         title: 'Invalid',
         address: 'Test St',
@@ -111,8 +108,17 @@ describe('AssessmentService', () => {
 
   // ================= FIND ONE =================
   describe('findOne', () => {
+    it('should return a single assessment', async () => {
+      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+      });
+      const result = await service.findOne(1);
+      expect(result).toEqual({ id: 1, deletedAt: null });
+    });
+
     it('should throw NotFoundException if not found', async () => {
-      (prisma.assessment.findUnique as jest.Mock).mockReturnValue(null);
+      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue(null);
       await expect(service.findOne(99)).rejects.toThrow(NotFoundException);
     });
   });
@@ -120,31 +126,44 @@ describe('AssessmentService', () => {
   // ================= UPDATE =================
   describe('update', () => {
     it('should update successfully', async () => {
-      (prisma.assessment.findUnique as jest.Mock).mockReturnValue({
-        id: 1,
-        created_by: 1,
-        reference_code: 'abc',
-        deletedAt: null,
-      });
-      const dto: UpdateAssessmentDto = { title: 'Updated' };
-      const result = await service.update(1, dto);
-      expect(result).toMatchObject({
-        id: 1,
-        title: 'Updated',
-        deletedAt: null,
-      });
+      (prisma.assessment.findUnique as jest.Mock)
+        .mockResolvedValueOnce({ id: 1, reference_code: 'abc', created_by: 1 }) // existing
+        .mockResolvedValueOnce(null); // check duplicate reference_code
+
+      (prisma.assessment.update as jest.Mock).mockResolvedValue({ id: 1 });
+
+      const result = await service.update(1, { reference_code: 'new' } as any);
+      expect(result).toEqual({ id: 1 });
+    });
+
+    it('should throw NotFoundException if assessment not found', async () => {
+      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue(null);
+      await expect(service.update(99, {} as any)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
   // ================= REMOVE =================
   describe('remove', () => {
-    it('should soft delete an assessment', async () => {
-      (prisma.assessment.findUnique as jest.Mock).mockReturnValue({
+    it('should soft delete assessment', async () => {
+      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue({
         id: 1,
         deletedAt: null,
       });
+      (prisma.assessment.update as jest.Mock).mockResolvedValue({ id: 1 });
+
       const result = await service.remove(1);
-      expect(result.deletedAt).toBeDefined();
+      expect(result).toEqual({ id: 1 });
+      expect(prisma.assessment.update).toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException if already deleted', async () => {
+      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      await expect(service.remove(1)).rejects.toThrow(NotFoundException);
     });
   });
 });
