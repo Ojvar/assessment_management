@@ -1,8 +1,6 @@
 {
   // Enable format on save
   "editor.formatOnSave": true,
-  // Optional: specify a default formatter
-  // (change this depending on your language or formatter)
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -15,12 +13,7 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  // Optional: format only modified lines (VS Code Insiders feature)
-  // "editor.formatOnSaveMode": "modifications"
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  // Optional: format only modified text instead of the whole file
-  // "editor.formatOnSaveMode": "modifications",
-  // Optional: automatically fix linting issues on save
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit"
