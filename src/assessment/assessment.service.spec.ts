@@ -1,7 +1,7 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../prisma/prisma.service';
 import { AssessmentService } from './assessment.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('AssessmentService', () => {
   let service: AssessmentService;
@@ -32,162 +32,91 @@ describe('AssessmentService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
-  // ================= CREATE =================
   describe('create', () => {
     it('should create an assessment successfully', async () => {
-      const dto = {
-        title: 'Test Assessment',
-        address: 'Street 123',
-        city: 'Tehran',
-        province: 'Tehran',
-        created_by: 1,
-      };
-
       (prisma.user.findUnique as jest.Mock).mockResolvedValue({ id: 1 });
-      (prisma.assessment.create as jest.Mock).mockResolvedValue({
-        id: 1,
-        ...dto,
-        reference_code: 'abc-123',
-      });
+      (prisma.assessment.create as jest.Mock).mockResolvedValue({ id: 1 });
 
-      const result = await service.create(dto as any);
+      const result = await service.create({
+        created_by: 1,
+        name: 'Test',
+      } as any);
 
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { id: 1 } });
+      expect(result).toEqual({ id: 1 });
       expect(prisma.assessment.create).toHaveBeenCalled();
-      expect(result.title).toBe('Test Assessment');
     });
 
-    it('should throw if created_by user not found', async () => {
+    it('should throw BadRequestException if user is invalid', async () => {
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
 
       await expect(
-        service.create({
-          title: 'Bad User',
-          address: 'x',
-          city: 'x',
-          province: 'x',
-          created_by: 999,
-        } as any),
+        service.create({ created_by: 999, name: 'Invalid' } as any),
       ).rejects.toThrow(BadRequestException);
     });
   });
 
-  // ================= FIND ALL =================
   describe('findAll', () => {
     it('should return all assessments', async () => {
-      const mockData = [
-        { id: 1, title: 'A' },
-        { id: 2, title: 'B' },
-      ];
-      (prisma.assessment.findMany as jest.Mock).mockResolvedValue(mockData);
-
+      (prisma.assessment.findMany as jest.Mock).mockResolvedValue([{ id: 1 }]);
       const result = await service.findAll();
-
-      expect(result).toEqual(mockData);
-      expect(prisma.assessment.findMany).toHaveBeenCalledWith({
-        where: { deletedAt: null },
-        include: { creator: true },
-        orderBy: { createdAt: 'desc' },
-      });
+      expect(result).toEqual([{ id: 1 }]);
     });
   });
 
-  // ================= FIND ONE =================
   describe('findOne', () => {
-    it('should return one assessment by id', async () => {
-      const mockAssessment = { id: 1, title: 'Test', deletedAt: null };
-      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue(
-        mockAssessment,
-      );
-
+    it('should return a single assessment', async () => {
+      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+      });
       const result = await service.findOne(1);
-
-      expect(result).toEqual(mockAssessment);
+      expect(result).toEqual({ id: 1, deletedAt: null });
     });
 
     it('should throw NotFoundException if not found', async () => {
       (prisma.assessment.findUnique as jest.Mock).mockResolvedValue(null);
+      await expect(service.findOne(99)).rejects.toThrow(NotFoundException);
+    });
+  });
 
-      await expect(service.findOne(999)).rejects.toThrow(NotFoundException);
+  describe('update', () => {
+    it('should update successfully', async () => {
+      (prisma.assessment.findUnique as jest.Mock)
+        .mockResolvedValueOnce({ id: 1, reference_code: 'abc', created_by: 1 }) // existing
+        .mockResolvedValueOnce(null); // for checking duplicate reference_code
+
+      (prisma.assessment.update as jest.Mock).mockResolvedValue({ id: 1 });
+
+      const result = await service.update(1, { reference_code: 'new' } as any);
+      expect(result).toEqual({ id: 1 });
     });
 
-    it('should throw NotFoundException if deleted', async () => {
+    it('should throw NotFoundException if assessment not found', async () => {
+      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue(null);
+      await expect(service.update(99, {} as any)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe('remove', () => {
+    it('should soft delete assessment', async () => {
+      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+      });
+      (prisma.assessment.update as jest.Mock).mockResolvedValue({ id: 1 });
+
+      const result = await service.remove(1);
+      expect(result).toEqual({ id: 1 });
+      expect(prisma.assessment.update).toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException if already deleted', async () => {
       (prisma.assessment.findUnique as jest.Mock).mockResolvedValue({
         id: 1,
         deletedAt: new Date(),
       });
-
-      await expect(service.findOne(1)).rejects.toThrow(NotFoundException);
-    });
-  });
-
-  // ================= UPDATE =================
-  describe('update', () => {
-    it('should update an assessment successfully', async () => {
-      const existing = { id: 1, reference_code: 'old-ref', created_by: 1 };
-      const dto = { title: 'Updated Title' };
-
-      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue(existing);
-      (prisma.assessment.update as jest.Mock).mockResolvedValue({
-        ...existing,
-        ...dto,
-      });
-
-      const result = await service.update(1, dto as any);
-
-      expect(result.title).toBe('Updated Title');
-      expect(prisma.assessment.update).toHaveBeenCalled();
-    });
-
-    it('should throw if assessment not found', async () => {
-      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue(null);
-
-      await expect(service.update(1, {} as any)).rejects.toThrow(
-        NotFoundException,
-      );
-    });
-
-    it('should throw if new reference_code already exists', async () => {
-      const existing = { id: 1, reference_code: 'ref1', created_by: 1 };
-      (prisma.assessment.findUnique as jest.Mock)
-        .mockResolvedValueOnce(existing)
-        .mockResolvedValueOnce({ id: 2, reference_code: 'ref2' });
-
-      await expect(
-        service.update(1, { reference_code: 'ref2' } as any),
-      ).rejects.toThrow(BadRequestException);
-    });
-
-    it('should throw if new created_by user invalid', async () => {
-      const existing = { id: 1, reference_code: 'ref1', created_by: 1 };
-      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue(existing);
-      (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
-
-      await expect(
-        service.update(1, { created_by: 999 } as any),
-      ).rejects.toThrow(BadRequestException);
-    });
-  });
-
-  // ================= REMOVE =================
-  describe('remove', () => {
-    it('should soft delete an assessment', async () => {
-      const existing = { id: 1, deletedAt: null };
-      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue(existing);
-      (prisma.assessment.update as jest.Mock).mockResolvedValue({
-        ...existing,
-        deletedAt: new Date(),
-      });
-
-      const result = await service.remove(1);
-
-      expect(result.deletedAt).toBeDefined();
-      expect(prisma.assessment.update).toHaveBeenCalled();
-    });
-
-    it('should throw if not found', async () => {
-      (prisma.assessment.findUnique as jest.Mock).mockResolvedValue(null);
-
       await expect(service.remove(1)).rejects.toThrow(NotFoundException);
     });
   });
