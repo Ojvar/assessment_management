@@ -1,10 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AssessmentController } from './assessment.controller';
 import { AssessmentService } from './assessment.service';
+import { CreateAssessmentDto } from './dto/create-assessment.dto';
+import { UpdateAssessmentDto } from './dto/update-assessment.dto';
+import { Status } from '@prisma/client';
 
 describe('AssessmentController', () => {
   let controller: AssessmentController;
-  let service: AssessmentService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -13,11 +15,22 @@ describe('AssessmentController', () => {
         {
           provide: AssessmentService,
           useValue: {
-            create: jest.fn(),
-            findAll: jest.fn(),
-            findOne: jest.fn(),
-            update: jest.fn(),
-            remove: jest.fn(),
+            create: jest.fn((dto: CreateAssessmentDto) => ({
+              id: 1,
+              title: dto.title,
+              address: dto.address,
+              city: dto.city,
+              province: dto.province,
+              created_by: dto.created_by,
+              status: dto.status ?? Status.draft,
+            })),
+            findAll: jest.fn(() => [{ id: 1 }]),
+            findOne: jest.fn((id: number) => ({ id })),
+            update: jest.fn((id: number, dto: UpdateAssessmentDto) => ({
+              id,
+              ...dto,
+            })),
+            remove: jest.fn((id: number) => ({ id })),
           },
         },
       ],
@@ -28,31 +41,35 @@ describe('AssessmentController', () => {
   });
 
   it('should call service.create on create()', async () => {
-    (service.create as jest.Mock).mockResolvedValue({ id: 1 });
-    const result = await controller.create({ name: 'test' } as any);
-    expect(result).toEqual({ id: 1 });
+    const dto: CreateAssessmentDto = {
+      title: 'Test',
+      address: 'Tehran St',
+      city: 'Tehran',
+      province: 'Tehran',
+      created_by: 1,
+    };
+    const result = await controller.create(dto);
+    expect(result).toHaveProperty('id');
+    expect(result.title).toBe(dto.title);
   });
 
   it('should call service.findAll on findAll()', async () => {
-    (service.findAll as jest.Mock).mockResolvedValue([{ id: 1 }]);
     const result = await controller.findAll();
     expect(result).toEqual([{ id: 1 }]);
   });
 
   it('should call service.findOne on findOne()', async () => {
-    (service.findOne as jest.Mock).mockResolvedValue({ id: 1 });
     const result = await controller.findOne(1);
     expect(result).toEqual({ id: 1 });
   });
 
   it('should call service.update on update()', async () => {
-    (service.update as jest.Mock).mockResolvedValue({ id: 1 });
-    const result = await controller.update(1, { name: 'updated' } as any);
-    expect(result).toEqual({ id: 1 });
+    const dto: UpdateAssessmentDto = { title: 'Updated' };
+    const result = await controller.update(1, dto);
+    expect(result).toEqual({ id: 1, ...dto });
   });
 
   it('should call service.remove on remove()', async () => {
-    (service.remove as jest.Mock).mockResolvedValue({ id: 1 });
     const result = await controller.remove(1);
     expect(result).toEqual({ id: 1 });
   });

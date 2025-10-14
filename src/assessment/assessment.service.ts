@@ -12,7 +12,7 @@ import logger from '../utils/logger';
 
 @Injectable()
 export class AssessmentService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   // ================= CREATE =================
   async create(dto: CreateAssessmentDto) {
@@ -117,7 +117,7 @@ export class AssessmentService {
     }
   }
 
-  // ================= REMOVE (SOFT DELETE) =================
+  // ================= REMOVE  =================
   async remove(id: number) {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
     if (!existing || existing.deletedAt)
