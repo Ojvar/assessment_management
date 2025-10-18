@@ -1,21 +1,21 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { randomUUID } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
+import Logger from '../utils/logger';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
-import { Prisma, Assessment } from '@prisma/client';
-import { randomUUID } from 'crypto';
-import logger from '../utils/logger';
 
 @Injectable()
 export class AssessmentService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   // ================= CREATE =================
-  async create(dto: CreateAssessmentDto): Promise<Assessment> {
+  async create(dto: CreateAssessmentDto) {
     try {
       const user = await this.prisma.user.findUnique({
         where: { id: dto.created_by },
@@ -42,13 +42,13 @@ export class AssessmentService {
         },
       });
     } catch (error) {
-      logger.error('❌ Error creating assessment:', error);
+      Logger.error('❌ Error creating assessment:', error);
       throw new BadRequestException('Failed to create assessment');
     }
   }
 
   // ================= FIND ALL =================
-  async findAll(): Promise<Assessment[]> {
+  async findAll() {
     return this.prisma.assessment.findMany({
       where: { deletedAt: null },
       include: { creator: true },
@@ -57,7 +57,7 @@ export class AssessmentService {
   }
 
   // ================= FIND ONE =================
-  async findOne(id: number): Promise<Assessment> {
+  async findOne(id: number) {
     const assessment = await this.prisma.assessment.findUnique({
       where: { id },
       include: { creator: true },
@@ -68,7 +68,7 @@ export class AssessmentService {
   }
 
   // ================= UPDATE =================
-  async update(id: number, dto: UpdateAssessmentDto): Promise<Assessment> {
+  async update(id: number, dto: UpdateAssessmentDto) {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
     if (!existing || existing.deletedAt)
       throw new NotFoundException('Assessment not found');
@@ -111,14 +111,14 @@ export class AssessmentService {
         },
       });
     } catch (error) {
-      logger.error('❌ Error updating assessment:', error);
+      Logger.error('❌ Error updating assessment:', error);
       if (error instanceof BadRequestException) throw error;
       throw new BadRequestException('Failed to update assessment');
     }
   }
 
-  // ================= REMOVE (SOFT DELETE) =================
-  async remove(id: number): Promise<Assessment> {
+  // ================= REMOVE  =================
+  async remove(id: number) {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
     if (!existing || existing.deletedAt)
       throw new NotFoundException('Assessment not found');
