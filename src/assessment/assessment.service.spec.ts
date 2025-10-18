@@ -70,6 +70,7 @@ describe('AssessmentService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
+  // ================= CREATE =================
   describe('create', () => {
     it('should create an assessment successfully', async () => {
       const dto: CreateAssessmentDto = {
@@ -85,7 +86,7 @@ describe('AssessmentService', () => {
     });
 
     it('should throw BadRequestException if user is invalid', async () => {
-      prisma.user.findUnique = jest.fn(() => null);
+      (prisma.user.findUnique as jest.Mock).mockReturnValue(null);
       const dto: CreateAssessmentDto = {
         title: 'Invalid',
         address: 'Test St',
@@ -97,6 +98,7 @@ describe('AssessmentService', () => {
     });
   });
 
+  // ================= FIND ALL =================
   describe('findAll', () => {
     it('should return all assessments', async () => {
       const result = await service.findAll();
@@ -104,21 +106,23 @@ describe('AssessmentService', () => {
     });
   });
 
+  // ================= FIND ONE =================
   describe('findOne', () => {
     it('should throw NotFoundException if not found', async () => {
-      prisma.assessment.findUnique = jest.fn(() => null);
+      (prisma.assessment.findUnique as jest.Mock).mockReturnValue(null);
       await expect(service.findOne(99)).rejects.toThrow(NotFoundException);
     });
   });
 
+  // ================= UPDATE =================
   describe('update', () => {
     it('should update successfully', async () => {
-      prisma.assessment.findUnique = jest.fn(() => ({
+      (prisma.assessment.findUnique as jest.Mock).mockReturnValue({
         id: 1,
         created_by: 1,
         reference_code: 'abc',
         deletedAt: null,
-      }));
+      });
       const dto: UpdateAssessmentDto = { title: 'Updated' };
       const result = await service.update(1, dto);
       expect(result).toMatchObject({
@@ -126,6 +130,18 @@ describe('AssessmentService', () => {
         title: 'Updated',
         deletedAt: null,
       });
+    });
+  });
+
+  // ================= REMOVE =================
+  describe('remove', () => {
+    it('should soft delete an assessment', async () => {
+      (prisma.assessment.findUnique as jest.Mock).mockReturnValue({
+        id: 1,
+        deletedAt: null,
+      });
+      const result = await service.remove(1);
+      expect(result.deletedAt).toBeDefined();
     });
   });
 });

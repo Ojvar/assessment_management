@@ -6,7 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, Assessment } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import Logger from '../utils/logger';
 
@@ -15,7 +15,7 @@ export class AssessmentService {
   constructor(private prisma: PrismaService) {}
 
   // ================= CREATE =================
-  async create(dto: CreateAssessmentDto) {
+  async create(dto: CreateAssessmentDto): Promise<Assessment> {
     try {
       const user = await this.prisma.user.findUnique({
         where: { id: dto.created_by },
@@ -48,7 +48,7 @@ export class AssessmentService {
   }
 
   // ================= FIND ALL =================
-  async findAll() {
+  async findAll(): Promise<Assessment[]> {
     return this.prisma.assessment.findMany({
       where: { deletedAt: null },
       include: { creator: true },
@@ -57,7 +57,7 @@ export class AssessmentService {
   }
 
   // ================= FIND ONE =================
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Assessment> {
     const assessment = await this.prisma.assessment.findUnique({
       where: { id },
       include: { creator: true },
@@ -68,7 +68,7 @@ export class AssessmentService {
   }
 
   // ================= UPDATE =================
-  async update(id: number, dto: UpdateAssessmentDto) {
+  async update(id: number, dto: UpdateAssessmentDto): Promise<Assessment> {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
     if (!existing || existing.deletedAt)
       throw new NotFoundException('Assessment not found');
@@ -117,8 +117,8 @@ export class AssessmentService {
     }
   }
 
-  // ================= REMOVE  =================
-  async remove(id: number) {
+  // ================= REMOVE (SOFT DELETE) =================
+  async remove(id: number): Promise<Assessment> {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
     if (!existing || existing.deletedAt)
       throw new NotFoundException('Assessment not found');

@@ -40,6 +40,10 @@ describe('AssessmentController', () => {
     service = module.get<AssessmentService>(AssessmentService);
   });
 
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+
   it('should call service.create on create()', async () => {
     const dto: CreateAssessmentDto = {
       title: 'Test',
