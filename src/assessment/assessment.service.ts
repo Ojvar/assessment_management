@@ -8,6 +8,7 @@ import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
+import Logger from '../utils/logger';
 
 @Injectable()
 export class AssessmentService {
@@ -41,7 +42,7 @@ export class AssessmentService {
         },
       });
     } catch (error) {
-      console.error('❌ Error creating assessment:', error);
+      Logger.error('❌ Error creating assessment:', error);
       throw new BadRequestException('Failed to create assessment');
     }
   }
@@ -110,7 +111,7 @@ export class AssessmentService {
         },
       });
     } catch (error) {
-      console.error('❌ Error updating assessment:', error);
+      Logger.error('❌ Error updating assessment:', error);
       if (error instanceof BadRequestException) throw error;
       throw new BadRequestException('Failed to update assessment');
     }
