@@ -12,7 +12,7 @@ import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
 @Injectable()
 export class AssessmentService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   // ================= CREATE =================
   async create(dto: CreateAssessmentDto) {
