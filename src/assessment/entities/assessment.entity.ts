@@ -12,7 +12,6 @@ export class Assessment {
   map_points?: { lat: number; lng: number }[];
   status: Status;
   reference_code?: string;
-  created_by: number;
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date;
