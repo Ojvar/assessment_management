@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AssessmentService } from './assessment.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 
-jest.spyOn(console, 'error').mockImplementation(() => { });
+jest.spyOn(console, 'error').mockImplementation(() => {});
 
 describe('AssessmentService', () => {
   let service: AssessmentService;

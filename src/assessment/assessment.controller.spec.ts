@@ -99,26 +99,6 @@ describe('AssessmentController', () => {
     expect(spy).toHaveBeenCalledWith(dto);
   });
 
-<<<<<<< HEAD
-  it('should call service.create on create', async () => {
-    const dto: CreateAssessmentDto = {
-      title: 'Test',
-      address: 'Tehran St',
-      city: 'Tehran',
-      province: 'Tehran',
-      created_by: 1,
-    };
-
-    const spy = jest.spyOn(service, 'create');
-    await controller.create(dto);
-    expect(spy).toHaveBeenCalledWith(dto);
-  });
-
-  it('should call service.findAll on findAll', async () => {
-    const spy = jest.spyOn(service, 'findAll');
-    await controller.findAll();
-    expect(spy).toHaveBeenCalled();
-=======
   it('should call service.findAll on findAll', async () => {
     const spy = jest.spyOn(service, 'findAll');
     await controller.findAll();
@@ -129,7 +109,6 @@ describe('AssessmentController', () => {
     const spy = jest.spyOn(service, 'findOne');
     await controller.findOne(1);
     expect(spy).toHaveBeenCalledWith(1);
->>>>>>> 73c2881 (Fix error)
   });
 
   it('should call service.update on update', async () => {
@@ -139,16 +118,6 @@ describe('AssessmentController', () => {
     expect(spy).toHaveBeenCalledWith(1, dto);
   });
 
-<<<<<<< HEAD
-  it('should call service.update on update', async () => {
-    const dto: UpdateAssessmentDto = { title: 'Updated' };
-    const spy = jest.spyOn(service, 'update');
-    await controller.update(1, dto);
-    expect(spy).toHaveBeenCalledWith(1, dto);
-  });
-
-=======
->>>>>>> 73c2881 (Fix error)
   it('should call service.remove on remove', async () => {
     const spy = jest.spyOn(service, 'remove');
     await controller.remove(1);
