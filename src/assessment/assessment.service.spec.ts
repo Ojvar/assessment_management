@@ -55,7 +55,6 @@ describe('AssessmentService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
-  // ================= CREATE =================
   describe('create', () => {
     it('should create an assessment successfully', async () => {
       const dto: CreateAssessmentDto = {
@@ -117,7 +116,6 @@ describe('findOne', () => {
       expect(result).toEqual({ id: 1, deletedAt: null });
     });
 
-    // ================= FIND ONE =================
     describe('findOne', () => {
       it('should return a single assessment', async () => {
         (prisma.assessment.findUnique as jest.Mock).mockResolvedValue({
