@@ -29,11 +29,15 @@ import logger from '../utils/logger';
 @Injectable()
 export class AssessmentService {
 <<<<<<< HEAD
+<<<<<<< HEAD
   constructor(private prisma: PrismaService) {}
 >>>>>>> 86154e2 (update .gitignore)
 =======
   constructor(private prisma: PrismaService) { }
 >>>>>>> fa68f8f (Squashed commit of the following:)
+=======
+  constructor(private prisma: PrismaService) { }
+>>>>>>> 4924fe6 (add:logger)
 
   // ================= CREATE =================
   async create(dto: CreateAssessmentDto) {
@@ -65,6 +69,7 @@ export class AssessmentService {
     } catch (error) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       Logger.error('❌ Error creating assessment:', error);
 =======
       console.error('❌ Error creating assessment:', error);
@@ -72,6 +77,9 @@ export class AssessmentService {
 =======
       logger.error('❌ Error creating assessment:', error);
 >>>>>>> fa68f8f (Squashed commit of the following:)
+=======
+      logger.error('❌ Error creating assessment:', error);
+>>>>>>> 4924fe6 (add:logger)
       throw new BadRequestException('Failed to create assessment');
     }
   }
