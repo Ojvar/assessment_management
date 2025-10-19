@@ -65,7 +65,6 @@ const logger = createLogger({
         format.colorize(),
         nestWinstonModuleUtilities.format.nestLike('HayaApp', {
           prettyPrint: true,
-          s,
         }),
       ),
     }),
