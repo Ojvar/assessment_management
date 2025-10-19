@@ -1,3 +1,4 @@
+// src/common/logger.ts
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston';
 import * as path from 'path';
 import { createLogger, format, transports } from 'winston';
@@ -14,7 +15,6 @@ const logger = createLogger({
     }),
   ),
   transports: [
-    // نمایش در ترمینال
     new transports.Console({
       format: format.combine(
         format.colorize(),
