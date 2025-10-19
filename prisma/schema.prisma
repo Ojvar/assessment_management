@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+=======
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+>>>>>>> 86154e2 (update .gitignore)
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,6 +24,7 @@ enum Status {
 }
 
 model Assessment {
+<<<<<<< HEAD
   id            Int       @id @default(autoincrement())
   title         String
   description   String?
@@ -52,6 +62,37 @@ model User {
   createdAssessments  Assessment[] @relation("CreatedAssessments")
   modifiedAssessments Assessment[] @relation("ModifiedAssessments")
   removedAssessments  Assessment[] @relation("RemovedAssessments")
+=======
+  id             Int       @id @default(autoincrement())
+  title          String
+  description    String?   
+  address        String
+  city           String
+  province       String
+  latitude       Decimal?  @db.Decimal(10, 7)
+  longitude      Decimal?  @db.Decimal(10, 7)
+  map_points     Json?     
+  status         Status    @default(draft)
+  reference_code String?   @unique
+  created_by     Int
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  // Relation
+  creator        User      @relation(fields: [created_by], references: [id])
+
+  @@map("assessments") 
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  password  String
+  isActive   Boolean   @default(true) @map("is_active")  
+  assessment Assessment[] 
+>>>>>>> 86154e2 (update .gitignore)
 
   @@map("users")
 }
