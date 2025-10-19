@@ -1,4 +1,3 @@
-// src/common/logger.ts
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston';
 import * as path from 'path';
 import { createLogger, format, transports } from 'winston';
@@ -24,7 +23,6 @@ const logger = createLogger({
       ),
     }),
 
-    // ذخیره لاگ‌ها در فایل
     new transports.File({
       filename: path.join(logDir, 'app.log'),
       level: 'info',
