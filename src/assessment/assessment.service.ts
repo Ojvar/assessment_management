@@ -1,18 +1,18 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateAssessmentDto } from './dto/create-assessment.dto';
-import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import logger from '../utils/logger';
+import { PrismaService } from '../prisma/prisma.service';
+import Logger from '../utils/logger';
+import { CreateAssessmentDto } from './dto/create-assessment.dto';
+import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
 @Injectable()
 export class AssessmentService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   // ================= CREATE =================
   async create(dto: CreateAssessmentDto) {
@@ -42,7 +42,7 @@ export class AssessmentService {
         },
       });
     } catch (error) {
-      logger.error('❌ Error creating assessment:', error);
+      Logger.error('❌ Error creating assessment:', error);
       throw new BadRequestException('Failed to create assessment');
     }
   }
@@ -111,13 +111,13 @@ export class AssessmentService {
         },
       });
     } catch (error) {
-      logger.error('❌ Error updating assessment:', error);
+      Logger.error('❌ Error updating assessment:', error);
       if (error instanceof BadRequestException) throw error;
       throw new BadRequestException('Failed to update assessment');
     }
   }
 
-  // ================= REMOVE (SOFT DELETE) =================
+  // ================= REMOVE  =================
   async remove(id: number) {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
     if (!existing || existing.deletedAt)
