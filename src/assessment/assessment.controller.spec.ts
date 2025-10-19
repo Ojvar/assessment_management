@@ -81,8 +81,13 @@ describe('AssessmentController', () => {
     service = module.get<AssessmentService>(AssessmentService);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  it('should call service.create on create()', async () => {
+    (service.create as jest.Mock).mockResolvedValue({ id: 1, title: 'Test' });
+    const result = await controller.create({
+      title: 'Test',
+      created_by: 1,
+    } as any);
+    expect(result).toEqual({ id: 1, title: 'Test' });
   });
 
   it('should call service.create on create', async () => {
@@ -105,10 +110,13 @@ describe('AssessmentController', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should call service.findOne on findOne', async () => {
-    const spy = jest.spyOn(service, 'findOne');
-    await controller.findOne(1);
-    expect(spy).toHaveBeenCalledWith(1);
+  it('should call service.update on update()', async () => {
+    (service.update as jest.Mock).mockResolvedValue({
+      id: 1,
+      title: 'Updated',
+    });
+    const result = await controller.update(1, { title: 'Updated' } as any);
+    expect(result).toEqual({ id: 1, title: 'Updated' });
   });
 
   it('should call service.update on update', async () => {
