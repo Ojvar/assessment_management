@@ -24,11 +24,16 @@ import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
+import logger from '../utils/logger';
 
 @Injectable()
 export class AssessmentService {
+<<<<<<< HEAD
   constructor(private prisma: PrismaService) {}
 >>>>>>> 86154e2 (update .gitignore)
+=======
+  constructor(private prisma: PrismaService) { }
+>>>>>>> fa68f8f (Squashed commit of the following:)
 
   // ================= CREATE =================
   async create(dto: CreateAssessmentDto) {
@@ -59,10 +64,14 @@ export class AssessmentService {
       });
     } catch (error) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       Logger.error('❌ Error creating assessment:', error);
 =======
       console.error('❌ Error creating assessment:', error);
 >>>>>>> 86154e2 (update .gitignore)
+=======
+      logger.error('❌ Error creating assessment:', error);
+>>>>>>> fa68f8f (Squashed commit of the following:)
       throw new BadRequestException('Failed to create assessment');
     }
   }
@@ -131,7 +140,7 @@ export class AssessmentService {
         },
       });
     } catch (error) {
-      console.error('❌ Error updating assessment:', error);
+      logger.error('❌ Error updating assessment:', error);
       if (error instanceof BadRequestException) throw error;
       throw new BadRequestException('Failed to update assessment');
     }

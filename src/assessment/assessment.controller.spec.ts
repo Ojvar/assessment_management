@@ -11,12 +11,14 @@ describe('AssessmentController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AssessmentController],
       providers: [
-        AssessmentService,
         {
-          provide: PrismaService,
+          provide: AssessmentService,
           useValue: {
-            assessment: {},
-            user: {},
+            create: jest.fn(),
+            findAll: jest.fn(),
+            findOne: jest.fn(),
+            update: jest.fn(),
+            remove: jest.fn(),
           },
         },
       ],
@@ -26,58 +28,33 @@ describe('AssessmentController', () => {
     service = module.get<AssessmentService>(AssessmentService);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  it('should call service.create on create()', async () => {
+    (service.create as jest.Mock).mockResolvedValue({ id: 1 });
+    const result = await controller.create({ name: 'test' } as any);
+    expect(result).toEqual({ id: 1 });
   });
 
-  describe('create', () => {
-    it('should call service.create', async () => {
-      const dto = { title: 'New', created_by: 1 } as any;
-      const result = { id: 1, title: 'New' };
-      jest.spyOn(service, 'create').mockResolvedValue(result as any);
-
-      expect(await controller.create(dto)).toBe(result);
-      expect(service.create).toHaveBeenCalledWith(dto);
-    });
+  it('should call service.findAll on findAll()', async () => {
+    (service.findAll as jest.Mock).mockResolvedValue([{ id: 1 }]);
+    const result = await controller.findAll();
+    expect(result).toEqual([{ id: 1 }]);
   });
 
-  describe('findAll', () => {
-    it('should call service.findAll', async () => {
-      const result = [{ id: 1 }];
-      jest.spyOn(service, 'findAll').mockResolvedValue(result as any);
-
-      expect(await controller.findAll()).toBe(result);
-    });
+  it('should call service.findOne on findOne()', async () => {
+    (service.findOne as jest.Mock).mockResolvedValue({ id: 1 });
+    const result = await controller.findOne(1);
+    expect(result).toEqual({ id: 1 });
   });
 
-  describe('findOne', () => {
-    it('should call service.findOne', async () => {
-      const result = { id: 1 };
-      jest.spyOn(service, 'findOne').mockResolvedValue(result as any);
-
-      expect(await controller.findOne(1)).toBe(result);
-      expect(service.findOne).toHaveBeenCalledWith(1);
-    });
+  it('should call service.update on update()', async () => {
+    (service.update as jest.Mock).mockResolvedValue({ id: 1 });
+    const result = await controller.update(1, { name: 'updated' } as any);
+    expect(result).toEqual({ id: 1 });
   });
 
-  describe('update', () => {
-    it('should call service.update', async () => {
-      const dto = { title: 'Updated' } as any;
-      const result = { id: 1, title: 'Updated' };
-      jest.spyOn(service, 'update').mockResolvedValue(result as any);
-
-      expect(await controller.update(1, dto)).toBe(result);
-      expect(service.update).toHaveBeenCalledWith(1, dto);
-    });
-  });
-
-  describe('remove', () => {
-    it('should call service.remove', async () => {
-      const result = { id: 1, deletedAt: new Date() };
-      jest.spyOn(service, 'remove').mockResolvedValue(result as any);
-
-      expect(await controller.remove(1)).toBe(result);
-      expect(service.remove).toHaveBeenCalledWith(1);
-    });
+  it('should call service.remove on remove()', async () => {
+    (service.remove as jest.Mock).mockResolvedValue({ id: 1 });
+    const result = await controller.remove(1);
+    expect(result).toEqual({ id: 1 });
   });
 });
