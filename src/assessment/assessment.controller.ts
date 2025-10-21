@@ -17,7 +17,7 @@ import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 @ApiTags('Assessments')
 @Controller('assessments')
 export class AssessmentController {
-  constructor(private readonly assessmentService: AssessmentService) {}
+  constructor(private readonly assessmentService: AssessmentService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new assessment' })
