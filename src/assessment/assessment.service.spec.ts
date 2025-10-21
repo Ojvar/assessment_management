@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AssessmentService } from './assessment.service';
+import { CreateAssessmentDto } from './dto/create-assessment.dto';
 
 jest.mock('crypto', () => ({
   randomUUID: jest.fn().mockReturnValue('mock-uuid'),
@@ -10,6 +11,7 @@ jest.mock('crypto', () => ({
 
 describe('AssessmentService', () => {
   let service: AssessmentService;
+  // let prisma: PrismaService;
 
   const mockUser = { id: 1, name: 'Test User' };
   const mockAssessment = {
@@ -44,20 +46,23 @@ describe('AssessmentService', () => {
     }).compile();
 
     service = module.get<AssessmentService>(AssessmentService);
-    prisma = module.get<PrismaService>(PrismaService);
+    // prisma = module.get<PrismaService>(PrismaService);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  // ================= CREATE =================
   describe('create', () => {
     it('should create assessment successfully', async () => {
       prismaMock.user.findUnique.mockResolvedValue(mockUser);
       prismaMock.assessment.create.mockResolvedValue(mockAssessment);
 
-      const dto = { created_by: 1, latitude: 10, longitude: 20 };
+      const dto: CreateAssessmentDto = {
+        created_by: 1,
+        latitude: 10,
+        longitude: 20,
+      };
       const result = await service.create(dto);
 
       expect(result).toEqual(mockAssessment);
@@ -72,7 +77,6 @@ describe('AssessmentService', () => {
     });
   });
 
-  // ================= FIND ALL =================
   describe('findAll', () => {
     it('should return all assessments', async () => {
       prismaMock.assessment.findMany.mockResolvedValue([mockAssessment]);
@@ -88,7 +92,6 @@ describe('AssessmentService', () => {
     });
   });
 
-  // ================= FIND ONE =================
   describe('findOne', () => {
     it('should return an assessment', async () => {
       prismaMock.assessment.findUnique.mockResolvedValue(mockAssessment);
@@ -111,7 +114,6 @@ describe('AssessmentService', () => {
     });
   });
 
-  // ================= UPDATE =================
   describe('update', () => {
     it('should update assessment successfully', async () => {
       prismaMock.assessment.findUnique.mockResolvedValue(mockAssessment);
@@ -140,7 +142,6 @@ describe('AssessmentService', () => {
     });
   });
 
-  // ================= REMOVE =================
   describe('remove', () => {
     it('should soft delete assessment', async () => {
       prismaMock.assessment.findUnique.mockResolvedValue(mockAssessment);

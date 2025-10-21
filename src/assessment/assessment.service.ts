@@ -8,37 +8,35 @@ import { randomUUID } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import Logger from '../utils/logger';
 import { AssessmentWithCreator } from './dto/assessment-response.dto';
-import { CreateAssessmentDto } from './dto/create-assessment.dto';
-import { UpdateAssessmentDto } from './dto/update-assessment.dto';
+import { CreateAssessmentDTO, UpdateAssessmentDTO } from './dto';
 
 @Injectable()
 export class AssessmentService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateAssessmentDto): Promise<AssessmentWithCreator> {
+  async create(data: CreateAssessmentDTO): Promise<AssessmentWithCreator> {
     try {
       const user = await this.prisma.user.findUnique({
-        where: { id: dto.created_by },
+        where: { id: data.created_by },
       });
       if (!user) {
         throw new BadRequestException('Invalid created_by user ID');
       }
 
-      const referenceCode = dto.reference_code ?? randomUUID();
-
+      const referenceCode = data.reference_code ?? randomUUID();
       return await this.prisma.assessment.create({
         data: {
-          ...dto,
+          ...data,
           reference_code: referenceCode,
           latitude:
-            dto.latitude !== undefined
-              ? new Prisma.Decimal(dto.latitude)
+            data.latitude !== undefined
+              ? new Prisma.Decimal(data.latitude)
               : null,
           longitude:
-            dto.longitude !== undefined
-              ? new Prisma.Decimal(dto.longitude)
+            data.longitude !== undefined
+              ? new Prisma.Decimal(data.longitude)
               : null,
-          status: dto.status ?? 'draft',
+          status: data.status ?? 'draft',
           updated_at: new Date(),
         },
       });
@@ -65,7 +63,7 @@ export class AssessmentService {
 
   async update(
     id: number,
-    dto: UpdateAssessmentDto,
+    dto: UpdateAssessmentDTO,
   ): Promise<AssessmentWithCreator> {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
     if (!existing || existing.deleted_at)

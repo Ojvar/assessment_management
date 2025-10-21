@@ -2,8 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Status } from '@prisma/client';
 import { AssessmentController } from './assessment.controller';
 import { AssessmentService } from './assessment.service';
-import { CreateAssessmentDto } from './dto/create-assessment.dto';
-import { UpdateAssessmentDto } from './dto/update-assessment.dto';
+import { CreateAssessmentDTO, UpdateAssessmentDTO } from './dto';
 
 describe('AssessmentController', () => {
   let controller: AssessmentController;
@@ -11,7 +10,7 @@ describe('AssessmentController', () => {
 
   beforeEach(async () => {
     const mockService = {
-      create: jest.fn((dto: CreateAssessmentDto) => ({
+      create: jest.fn((dto: CreateAssessmentDTO) => ({
         id: 1,
         title: dto.title,
         description: dto.description ?? '',
@@ -55,7 +54,7 @@ describe('AssessmentController', () => {
         reference_code: 'REF-12345',
         created_by: 1,
       })),
-      update: jest.fn((id: number, dto: UpdateAssessmentDto) => ({
+      update: jest.fn((id: number, dto: UpdateAssessmentDTO) => ({
         id,
         title: dto.title ?? 'Old Title',
         description: dto.description ?? '',
@@ -86,7 +85,7 @@ describe('AssessmentController', () => {
   });
 
   it('should call service.create on create', async () => {
-    const dto: CreateAssessmentDto = {
+    const dto: CreateAssessmentDTO = {
       title: 'Test',
       address: 'Tehran St',
       city: 'Tehran',
@@ -112,7 +111,7 @@ describe('AssessmentController', () => {
   });
 
   it('should call service.update on update', async () => {
-    const dto: UpdateAssessmentDto = { title: 'Updated' };
+    const dto: UpdateAssessmentDTO = { title: 'Updated' };
     const spy = jest.spyOn(service, 'update');
     await controller.update(1, dto);
     expect(spy).toHaveBeenCalledWith(1, dto);

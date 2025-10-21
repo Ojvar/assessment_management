@@ -8,7 +8,7 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Status } from '@prisma/client';
 
-export class CreateAssessmentDto {
+export class CreateAssessmentDTO {
   @ApiProperty({ description: 'Title of the assessment' })
   @IsString()
   title: string;

@@ -4,7 +4,7 @@ import { LoginDTO } from './dto/login.dto'; // تغییر به LoginDTO
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('login')
   async login(@Body() loginDto: LoginDTO) {

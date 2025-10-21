@@ -11,18 +11,17 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AssessmentService } from './assessment.service';
 import { AssessmentWithCreator } from './dto/assessment-response.dto';
-import { CreateAssessmentDto } from './dto/create-assessment.dto';
-import { UpdateAssessmentDto } from './dto/update-assessment.dto';
+import { CreateAssessmentDTO, UpdateAssessmentDTO } from './dto';
 
 @ApiTags('Assessments')
 @Controller('assessments')
 export class AssessmentController {
-  constructor(private readonly assessmentService: AssessmentService) { }
+  constructor(private readonly assessmentService: AssessmentService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new assessment' })
   @ApiResponse({ status: 201, description: 'Assessment created successfully' })
-  create(@Body() dto: CreateAssessmentDto): Promise<AssessmentWithCreator> {
+  create(@Body() dto: CreateAssessmentDTO): Promise<AssessmentWithCreator> {
     return this.assessmentService.create(dto);
   }
 
@@ -37,7 +36,7 @@ export class AssessmentController {
   @ApiResponse({
     status: 200,
     description: 'Assessment retrieved successfully',
-    type: CreateAssessmentDto,
+    type: CreateAssessmentDTO,
   })
   findOne(
     @Param('id', ParseIntPipe) id: number,
@@ -49,9 +48,9 @@ export class AssessmentController {
   @ApiOperation({ summary: 'Update an assessment by ID' })
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateAssessmentDto,
+    @Body() body: UpdateAssessmentDTO,
   ): Promise<AssessmentWithCreator> {
-    return this.assessmentService.update(id, dto);
+    return this.assessmentService.update(id, body);
   }
 
   @Delete(':id')
