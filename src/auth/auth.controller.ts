@@ -1,6 +1,7 @@
 import { Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { LoginResponseDTO } from './dto/login-response.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -13,7 +14,7 @@ export class AuthController {
     status: 200,
     description: 'The JWT token has been successfully generated.',
   })
-  async login() {
+  async login(): Promise<LoginResponseDTO> {
     const user = { username: 'existingUser', userId: 1 };
     return this.authService.login(user);
   }

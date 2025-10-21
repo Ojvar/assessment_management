@@ -15,7 +15,7 @@ import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 export class AssessmentService {
   constructor(private prisma: PrismaService) { }
 
-  async create(dto: CreateAssessmentDto) {
+  async create(dto: CreateAssessmentDto): Promise<AssessmentWithCreator> {
     try {
       const user = await this.prisma.user.findUnique({
         where: { id: dto.created_by },
@@ -62,7 +62,10 @@ export class AssessmentService {
     });
   }
 
-  async update(id: number, dto: UpdateAssessmentDto) {
+  async update(
+    id: number,
+    dto: UpdateAssessmentDto,
+  ): Promise<AssessmentWithCreator> {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
     if (!existing || existing.deletedAt)
       throw new NotFoundException('Assessment not found');
@@ -111,7 +114,6 @@ export class AssessmentService {
     }
   }
 
-  // ================= REMOVE  =================
   async remove(id: number) {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
     if (!existing || existing.deletedAt)

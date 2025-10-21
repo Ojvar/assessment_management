@@ -9,8 +9,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Assessment } from '@prisma/client';
 import { AssessmentService } from './assessment.service';
+import { AssessmentWithCreator } from './dto/assessment-response.dto';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
@@ -22,13 +22,13 @@ export class AssessmentController {
   @Post()
   @ApiOperation({ summary: 'Create a new assessment' })
   @ApiResponse({ status: 201, description: 'Assessment created successfully' })
-  create(@Body() dto: CreateAssessmentDto): Promise<Assessment> {
+  create(@Body() dto: CreateAssessmentDto): Promise<AssessmentWithCreator> {
     return this.assessmentService.create(dto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all assessments' })
-  findAll(): Promise<Assessment[]> {
+  findAll(): Promise<AssessmentWithCreator[]> {
     return this.assessmentService.findAll();
   }
 
@@ -39,7 +39,9 @@ export class AssessmentController {
     description: 'Assessment retrieved successfully',
     type: CreateAssessmentDto,
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Assessment> {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<AssessmentWithCreator | null> {
     return this.assessmentService.findOne(id);
   }
 
@@ -48,13 +50,15 @@ export class AssessmentController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateAssessmentDto,
-  ): Promise<Assessment> {
+  ): Promise<AssessmentWithCreator> {
     return this.assessmentService.update(id, dto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete an assessment by ID' })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<Assessment> {
+  remove(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<AssessmentWithCreator> {
     return this.assessmentService.remove(id);
   }
 }

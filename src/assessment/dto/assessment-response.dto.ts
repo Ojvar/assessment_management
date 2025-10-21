@@ -47,5 +47,4 @@ export class AssessmentResponseDto {
   created_by: number;
 }
 
-
-export type AssessmentWithCreator = Assessment & { creator: User }
+export type AssessmentWithCreator = Assessment & { creator?: User };
