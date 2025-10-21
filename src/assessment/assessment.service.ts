@@ -7,14 +7,14 @@ import { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import Logger from '../utils/logger';
+import { AssessmentWithCreator } from './dto/assessment-response.dto';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
 @Injectable()
 export class AssessmentService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
-  // ================= CREATE =================
   async create(dto: CreateAssessmentDto) {
     try {
       const user = await this.prisma.user.findUnique({
@@ -47,7 +47,6 @@ export class AssessmentService {
     }
   }
 
-  // ================= FIND ALL =================
   async findAll() {
     return this.prisma.assessment.findMany({
       where: { deletedAt: null },
@@ -56,18 +55,13 @@ export class AssessmentService {
     });
   }
 
-  // ================= FIND ONE =================
-  async findOne(id: number) {
-    const assessment = await this.prisma.assessment.findUnique({
+  findOne(id: number): Promise<AssessmentWithCreator | null> {
+    return this.prisma.assessment.findUniqueOrThrow({
       where: { id },
       include: { creator: true },
     });
-    if (!assessment || assessment.deletedAt)
-      throw new NotFoundException('Assessment not found');
-    return assessment;
   }
 
-  // ================= UPDATE =================
   async update(id: number, dto: UpdateAssessmentDto) {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
     if (!existing || existing.deletedAt)

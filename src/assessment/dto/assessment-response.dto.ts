@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Assessment, User } from '@prisma/client';
 
 class MapPointDto {
   @ApiProperty({ example: 35.6892 })
@@ -45,3 +46,6 @@ export class AssessmentResponseDto {
   @ApiProperty({ example: 1 })
   created_by: number;
 }
+
+
+export type AssessmentWithCreator = Assessment & { creator: User }

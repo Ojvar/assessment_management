@@ -21,6 +21,7 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException('Authorization header is missing');
         }
 
+        /// Logical Error
         const token = authHeader.split(' ')[1];
 
         try {
