@@ -39,6 +39,7 @@ export class AssessmentService {
               ? new Prisma.Decimal(dto.longitude)
               : null,
           status: dto.status ?? 'draft',
+          updated_at: new Date(),
         },
       });
     } catch (error) {
@@ -49,16 +50,16 @@ export class AssessmentService {
 
   async findAll() {
     return this.prisma.assessment.findMany({
-      where: { deletedAt: null },
-      include: { creator: true },
-      orderBy: { createdAt: 'desc' },
+      where: { deleted_at: null },
+      include: { User: true },
+      orderBy: { created_at: 'desc' },
     });
   }
 
   findOne(id: number): Promise<AssessmentWithCreator | null> {
     return this.prisma.assessment.findUniqueOrThrow({
       where: { id },
-      include: { creator: true },
+      include: { User: true },
     });
   }
 
@@ -67,7 +68,7 @@ export class AssessmentService {
     dto: UpdateAssessmentDto,
   ): Promise<AssessmentWithCreator> {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
-    if (!existing || existing.deletedAt)
+    if (!existing || existing.deleted_at)
       throw new NotFoundException('Assessment not found');
 
     try {
@@ -105,6 +106,7 @@ export class AssessmentService {
             longitude !== undefined ? new Prisma.Decimal(longitude) : undefined,
           reference_code: newReferenceCode,
           created_by: newCreatedBy,
+          updated_at: new Date(),
         },
       });
     } catch (error) {
@@ -116,12 +118,12 @@ export class AssessmentService {
 
   async remove(id: number) {
     const existing = await this.prisma.assessment.findUnique({ where: { id } });
-    if (!existing || existing.deletedAt)
+    if (!existing || existing.deleted_at)
       throw new NotFoundException('Assessment not found');
 
     return this.prisma.assessment.update({
       where: { id },
-      data: { deletedAt: new Date() },
+      data: { deleted_at: new Date() },
     });
   }
 }
