@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AssessmentService } from './assessment.service';
-import { CreateAssessmentDto } from './dto/create-assessment.dto';
+import { CreateAssessmentDTO } from './dto';
 
 jest.mock('crypto', () => ({
   randomUUID: jest.fn().mockReturnValue('mock-uuid'),
@@ -58,7 +58,7 @@ describe('AssessmentService', () => {
       prismaMock.user.findUnique.mockResolvedValue(mockUser);
       prismaMock.assessment.create.mockResolvedValue(mockAssessment);
 
-      const dto: CreateAssessmentDto = {
+      const dto: CreateAssessmentDTO = {
         created_by: 1,
         latitude: 10,
         longitude: 20,
