@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import Logger from '../utils/logger';
-import { AssessmentWithCreator } from './dto/assessment-response.dto';
 import { CreateAssessmentDTO, UpdateAssessmentDTO } from './dto';
+import { AssessmentWithCreator } from './dto/assessment-response.dto';
 
 @Injectable()
 export class AssessmentService {
