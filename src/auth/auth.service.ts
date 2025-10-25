@@ -7,7 +7,7 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async validateUser(email: string, password: string): Promise<string> {
     try {
@@ -20,8 +20,7 @@ export class AuthService {
       const accessToken = this.jwtService.sign(payload);
 
       return accessToken;
-    } catch (error) {
-      console.error('Error:', error);
+    } catch {
       throw new Error('User not found');
     }
   }
