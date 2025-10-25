@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   findById(id: number): Promise<User> {
     return this.prisma.user.findUniqueOrThrow({ where: { id } });
@@ -12,7 +12,7 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<User> {
     return this.prisma.user.findUniqueOrThrow({
-      where: { email },
+      where: { email: email },
     });
   }
 }
