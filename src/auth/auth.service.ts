@@ -1,25 +1,36 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+// auth.service.ts
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/user.service';
+import { User } from 'generated/prisma';
+import { UsersService } from '../users/users.service'; // فرض می‌کنیم که UsersService به درستی وارد شده است
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService,
-  ) {}
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) { }
 
-  async signIn(
-    username: string,
-    pass: string,
-  ): Promise<{ access_token: string }> {
-    const user = await this.usersService.findOne(username);
-    if (user?.password !== pass) {
-      throw new UnauthorizedException();
+  async validateUser(email: string, password: string): Promise<User> {
+    console.log('Searching for user with email:', email);
+    try {
+      const user = await this.usersService.findByEmail(email);
+      console.log('User found:', user);
+      if (user.password !== password) {
+        throw new Error('Invalid credentials');
+      }
+      return user;
+    } catch (error) {
+      console.error('Error:', error);
+      throw new Error('User not found');
     }
-    const payload = { sub: user.userId, username: user.username };
+  }
+
+  async login(user: any) {
+    const payload: JwtPayload = { email: user.email, sub: user.id };
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: this.jwtService.sign(payload),
     };
   }
 }
