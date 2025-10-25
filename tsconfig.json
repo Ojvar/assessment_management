@@ -21,10 +21,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "generated/prisma": [
-        "./generated/prisma"
-      ]
-    }
+    "paths": {}
   }
 }
