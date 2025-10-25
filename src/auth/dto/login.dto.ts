@@ -2,14 +2,14 @@ import { ApiProperty } from '@nestjs/swagger/dist/decorators/api-property.decora
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class LoginDTO {
-  @ApiProperty()
-  @IsEmail()
-  @IsString()
-  @IsNotEmpty()
-  email: string;
+    @ApiProperty()
+    @IsEmail()
+    @IsString()
+    @IsNotEmpty()
+    email: string;
 
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  password: string;
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    password: string;
 }
