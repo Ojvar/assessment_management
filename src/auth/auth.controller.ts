@@ -1,5 +1,4 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import { User } from 'generated/prisma';
 import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login.dto';
 
@@ -9,7 +8,11 @@ export class AuthController {
 
   @Post('/login')
   @HttpCode(200)
-  login(@Body() loginDto: LoginDTO): Promise<User> {
-    return this.authService.validateUser(loginDto.email, loginDto.password);
+  async login(@Body() loginDto: LoginDTO): Promise<{ accessToken: string }> {
+    const accessToken = await this.authService.validateUser(
+      loginDto.email,
+      loginDto.password,
+    );
+    return { accessToken };
   }
 }
