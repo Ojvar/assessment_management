@@ -1,20 +1,15 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { User } from 'generated/prisma';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
+import { LoginDTO } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    const user = await this.authService.validateUser(
-      loginDto.email,
-      loginDto.password,
-    );
-    if (!user) {
-      throw new Error('Invalid credentials');
-    }
-    return this.authService.login(user);
+  @Post('/login')
+  @HttpCode(200)
+  login(@Body() loginDto: LoginDTO): Promise<User> {
+    return this.authService.validateUser(loginDto.email, loginDto.password);
   }
 }

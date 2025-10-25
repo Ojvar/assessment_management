@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger/dist/decorators/api-property.decorator';
-import { IsNotEmpty, IsString } from 'class-validator';
-import { IsEmail } from 'class-validator/types/decorator/string/IsEmail';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class LoginDto {
-    @ApiProperty()
-    @IsEmail()
-    @IsString()
-    @IsNotEmpty()
-    email: string;
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    password: string;
+export class LoginDTO {
+  @ApiProperty()
+  @IsEmail()
+  @IsString()
+  @IsNotEmpty()
+  email: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }
