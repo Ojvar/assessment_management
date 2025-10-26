@@ -1,7 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from '../types';
+import { EnumErrorType, throwError } from 'src/helpers/error.helper';
 import { RequestWithUser } from 'src/types/request.type';
+import { JwtPayload } from '../types';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -12,7 +13,7 @@ export class JwtAuthGuard implements CanActivate {
     const token = request.headers['authorization'] as string;
 
     if (!token) {
-      throw new Error('No token provided');
+      throwError(EnumErrorType.JwtTokenError);
     }
 
     try {
@@ -22,7 +23,7 @@ export class JwtAuthGuard implements CanActivate {
       request.user = decoded;
     } catch (error: unknown) {
       console.error(error);
-      throw new Error('Invalid token');
+      throwError(EnumErrorType.InavlidJwtToken);
     }
 
     return true;

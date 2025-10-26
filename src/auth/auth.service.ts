@@ -1,9 +1,6 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { EnumErrorType, throwError } from 'src/helpers/error.helper';
 import { UsersService } from 'src/users/users.service';
 import { JwtPayload } from './types';
 
@@ -18,7 +15,7 @@ export class AuthService {
     try {
       const user = await this.usersService.findByEmail(email);
       if (user.password !== password) {
-        throw new UnauthorizedException('Invalid credentials');
+        throwError(EnumErrorType.UnauthorizedException);
       }
 
       const payload = { email: user.email, sub: user.id };
@@ -28,7 +25,7 @@ export class AuthService {
         access_token: accessToken,
       });
     } catch {
-      throw new InternalServerErrorException('Operation failed');
+      throwError(EnumErrorType.UnauthorizedException);
     }
   }
 }
