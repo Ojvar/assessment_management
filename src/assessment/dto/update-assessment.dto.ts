@@ -1,0 +1,23 @@
+import { PartialType } from '@nestjs/mapped-types';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { CreateAssessmentDTO } from './create-assessment.dto';
+
+export class UpdateAssessmentDTO extends PartialType(CreateAssessmentDTO) {
+  @ApiPropertyOptional()
+  title?: string;
+
+  @ApiPropertyOptional()
+  description?: string;
+
+  @ApiPropertyOptional()
+  province?: string;
+
+  @ApiPropertyOptional()
+  city?: string;
+
+  @ApiPropertyOptional()
+  address?: string;
+
+  @ApiPropertyOptional()
+  zipCode?: string;
+}
