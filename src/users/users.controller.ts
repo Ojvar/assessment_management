@@ -1,5 +1,5 @@
 import { Controller, Get, HttpCode, Param } from '@nestjs/common';
-import { User } from 'generated/prisma';
+import { User } from '@prisma/client';
 import { UsersService } from './users.service';
 
 @Controller('users')

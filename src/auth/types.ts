@@ -7,6 +7,6 @@ export class JwtPayload {
   access_token: string;
 
   constructor(data?: Partial<JwtPayload>) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 }
