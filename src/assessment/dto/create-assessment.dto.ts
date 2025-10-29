@@ -31,4 +31,8 @@ export class CreateAssessmentDTO {
   @IsString()
   @Length(5, 10)
   zipCode: string;
+
+  constructor(partial: Partial<CreateAssessmentDTO>) {
+    Object.assign(this, partial);
+  }
 }
