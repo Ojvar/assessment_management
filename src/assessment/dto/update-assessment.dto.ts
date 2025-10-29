@@ -20,4 +20,9 @@ export class UpdateAssessmentDTO extends PartialType(CreateAssessmentDTO) {
 
   @ApiPropertyOptional()
   zipCode?: string;
+
+  constructor(partial: Partial<UpdateAssessmentDTO>) {
+    super();
+    Object.assign(this, partial);
+  }
 }

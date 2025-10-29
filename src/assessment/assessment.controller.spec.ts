@@ -2,7 +2,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AssessmentController } from './assessment.controller';
 import { AssessmentService } from './assessment.service';
-import { CreateAssessmentDTO } from './dto/create-assessment.dto';
+import { CreateAssessmentDTO } from './dto';
 
 describe('AssessmentController', () => {
   let controller: AssessmentController;

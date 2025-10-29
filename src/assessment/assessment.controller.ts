@@ -10,8 +10,7 @@ import {
 } from '@nestjs/common';
 import { Assessment } from '@prisma/client';
 import { AssessmentService } from './assessment.service';
-import { CreateAssessmentDTO } from './dto/create-assessment.dto';
-import { UpdateAssessmentDTO } from './dto/update-assessment.dto';
+import { CreateAssessmentDTO, UpdateAssessmentDTO } from './dto';
 
 @Controller('assessments')
 export class AssessmentController {

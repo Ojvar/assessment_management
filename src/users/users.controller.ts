@@ -1,5 +1,6 @@
 import { Controller, Get, HttpCode, Param } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { plainToInstance } from 'class-transformer';
+import { UserDTO } from './dto/user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -8,7 +9,8 @@ export class UsersController {
 
   @Get('/:id')
   @HttpCode(200)
-  findByEmail(@Param('id') id: number): Promise<User> {
-    return this.usersService.findById(id);
+  async findByEmail(@Param('id') id: number): Promise<UserDTO> {
+    const user = await this.usersService.findById(id);
+    return plainToInstance(UserDTO, user);
   }
 }
