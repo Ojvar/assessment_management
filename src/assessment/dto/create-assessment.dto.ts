@@ -1,10 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
-  Length,
+  Length
 } from 'class-validator';
 
 export class CreateAssessmentDTO {
@@ -19,12 +19,12 @@ export class CreateAssessmentDTO {
   description?: string;
 
   @ApiProperty()
-  @IsInt()
+  @IsNumber()
   @IsNotEmpty()
   provinceId: number;
 
   @ApiProperty()
-  @IsInt()
+  @IsNumber()
   @IsNotEmpty()
   cityId: number;
 
