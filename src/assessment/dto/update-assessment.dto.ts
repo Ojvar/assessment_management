@@ -10,10 +10,10 @@ export class UpdateAssessmentDTO extends PartialType(CreateAssessmentDTO) {
   description?: string;
 
   @ApiPropertyOptional()
-  province?: string;
+  provinceId?: number;
 
   @ApiPropertyOptional()
-  city?: string;
+  cityId?: number;
 
   @ApiPropertyOptional()
   address?: string;
