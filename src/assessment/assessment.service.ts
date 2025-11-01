@@ -5,7 +5,7 @@ import { CreateAssessmentDTO, UpdateAssessmentDTO } from './dto';
 
 @Injectable()
 export class AssessmentService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreateAssessmentDTO): Promise<Assessment> {
     return this.prisma.assessment.create({ data });
@@ -15,27 +15,27 @@ export class AssessmentService {
     return this.prisma.assessment.findMany();
   }
 
-  async findOne(id: number): Promise<Assessment> {
-    return await this.prisma.assessment.findUniqueOrThrow({
+  findOne(id: number): Promise<Assessment> {
+    return this.prisma.assessment.findUniqueOrThrow({
       where: { id },
     });
   }
 
-  async update(id: number, data: UpdateAssessmentDTO): Promise<Assessment> {
+  update(id: number, data: UpdateAssessmentDTO): Promise<Assessment> {
     try {
-      return await this.prisma.assessment.update({
+      return this.prisma.assessment.update({
         where: { id },
         data,
       });
-    } catch (error) {
+    } catch {
       throw new NotFoundException(`Assessment with ID ${id} not found`);
     }
   }
 
-  async remove(id: number) {
+  remove(id: number) {
     try {
-      return await this.prisma.assessment.delete({ where: { id } });
-    } catch (error) {
+      return this.prisma.assessment.delete({ where: { id } });
+    } catch {
       throw new NotFoundException(`Assessment with ID ${id} not found`);
     }
   }

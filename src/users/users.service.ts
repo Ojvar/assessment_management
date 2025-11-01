@@ -4,13 +4,13 @@ import { UserDTO } from './dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   findById(id: number): Promise<UserDTO> {
     return this.prisma.user.findUniqueOrThrow({ where: { id } });
   }
 
-  async findByEmail(email: string): Promise<UserDTO> {
+  findByEmail(email: string): Promise<UserDTO> {
     return this.prisma.user.findUniqueOrThrow({
       where: { email: email },
     });
