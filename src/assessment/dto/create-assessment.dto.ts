@@ -4,7 +4,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Length
+  Length,
 } from 'class-validator';
 
 export class CreateAssessmentDTO {
