@@ -1,8 +1,33 @@
+# Node modules
 node_modules
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# TypeScript build artifacts
 dist
-.git
+*.ts
+
+# Environment files
+.env*
+
+# IDE and editor directories
 .vscode
-.env.local
-.env.test
-npm-debug.log
-Dockerfile.dev
+.idea
+*.sublime-workspace
+*.sublime-project
+
+# NPM package lock
+package-lock.json
+
+# Docker-related files
+docker-compose.override.yml
+docker-compose.yml
+
+# Git directories
+.git
+.gitignore
