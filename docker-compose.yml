@@ -1,20 +1,32 @@
+version: '3.9'
+
+networks:
+  app-network:
+
 services:
-  app:
+  assessement:
+    image: assessement
     build: .
-    container_name: assessment-app
+    hostname: assessement
+    container_name: assessement
     ports:
       - '3000:3000'
-    env_file:
-      - .env
     depends_on:
       - db
+    env_file:
+      - .env
+    networks:
+      - app-network
 
   db:
-    image: postgres:15
-    container_name: postgres_db
+    image: postgres:17
+    container_name: db
+    hostname: db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: test_db
-    ports:
-      - '5432:5432'
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=assessment_db
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
