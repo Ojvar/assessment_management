@@ -5,7 +5,8 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService
   extends PrismaClient
-  implements OnModuleInit, OnModuleDestroy {
+  implements OnModuleInit, OnModuleDestroy
+{
   async onModuleInit() {
     let connected = false;
     let retries = 10;
@@ -14,7 +15,7 @@ export class PrismaService
       try {
         await this.$connect();
         connected = true;
-      } catch (e) {
+      } catch {
         retries--;
         console.warn(
           `⚠️  Prisma failed to connect. Retry ${10 - retries}/10...`,
