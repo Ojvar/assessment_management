@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-=======
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
->>>>>>> 86154e2 (update .gitignore)
 generator client {
   provider = "prisma-client-js"
 }
@@ -16,83 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Status {
-  draft
-  active
-  completed
-  archived
-}
-
-model Assessment {
-<<<<<<< HEAD
-  id            Int       @id @default(autoincrement())
-  title         String
-  description   String?
-  address       String
-  city          String
-  province      String
-  latitude      Decimal?  @db.Decimal(10, 7)
-  longitude     Decimal?  @db.Decimal(10, 7)
-  mapPoints     Json?     @map("map_points")
-  status        Status    @default(draft)
-  referenceCode String?   @unique @map("reference_code")
-  createdBy     Int       @map("created_by")
-  updatedBy     Int       @map("updated_by")
-  deletedBy     Int?      @map("deleted_by")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
-  deletedAt     DateTime? @map("deleted_at")
-
-  // Relations
-  createdByUser  User  @relation("CreatedAssessments", fields: [createdBy], references: [id])
-  modifiedByUser User  @relation("ModifiedAssessments", fields: [updatedBy], references: [id])
-  removedByUser  User? @relation("RemovedAssessments", fields: [deletedBy], references: [id])
-
-  @@map("assessments")
-}
-
 model User {
   id       Int     @id @default(autoincrement())
   email    String  @unique
-  name     String
   password String
-  isActive Boolean @default(true) @map("is_active")
-
-  // Relations
-  createdAssessments  Assessment[] @relation("CreatedAssessments")
-  modifiedAssessments Assessment[] @relation("ModifiedAssessments")
-  removedAssessments  Assessment[] @relation("RemovedAssessments")
-=======
-  id             Int       @id @default(autoincrement())
-  title          String
-  description    String?   
-  address        String
-  city           String
-  province       String
-  latitude       Decimal?  @db.Decimal(10, 7)
-  longitude      Decimal?  @db.Decimal(10, 7)
-  map_points     Json?     
-  status         Status    @default(draft)
-  reference_code String?   @unique
-  created_by     Int
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
-  deletedAt      DateTime? @map("deleted_at")
-
-  // Relation
-  creator        User      @relation(fields: [created_by], references: [id])
-
-  @@map("assessments") 
-}
-
-model User {
-  id        Int        @id @default(autoincrement())
-  name      String
-  email     String     @unique
-  password  String
-  isActive   Boolean   @default(true) @map("is_active")  
-  assessment Assessment[] 
->>>>>>> 86154e2 (update .gitignore)
+  name     String?
 
   @@map("users")
 }
