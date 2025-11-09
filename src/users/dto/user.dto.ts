@@ -15,8 +15,13 @@ export class UserDTO {
   @IsString()
   password: string;
 
-  @ApiProperty({ required: false })
+  @ApiProperty()
   @IsOptional()
-  @IsNumber()
-  roleId?: number | null;
+  @IsString()
+  role?: string | null;
+
+
+  constructor(partial: Partial<UserDTO>) {
+    Object.assign(this, partial);
+  }
 }

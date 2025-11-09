@@ -8,8 +8,9 @@ import { RolesGuard } from './guards/roles.guard';
 import { JwtPayload } from './types';
 
 @Controller('auth')
+@ApiBearerAuth()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('/login')
   @ApiResponse({
@@ -19,7 +20,7 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  @ApiBearerAuth()
+
   login(@Body() loginDto: LoginDTO): Promise<JwtPayload> {
     return this.authService.validateUser(loginDto.email, loginDto.password);
   }
@@ -36,7 +37,6 @@ export class AuthController {
     description: 'Forbidden - Insufficient permissions',
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiBearerAuth()
   protectedRoute() {
     return { message: 'This is a protected route that requires admin role' };
   }
