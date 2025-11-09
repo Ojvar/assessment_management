@@ -19,4 +19,9 @@ export class UserDTO {
   @IsOptional()
   @IsString()
   role?: string | null;
+
+
+  constructor(partial: Partial<UserDTO>) {
+    Object.assign(this, partial);
+  }
 }

@@ -4,7 +4,7 @@ import { UserDTO } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async findById(id: number): Promise<UserDTO> {
     const user = await this.prisma.user.findUniqueOrThrow({
@@ -12,12 +12,12 @@ export class UsersService {
       include: { role: true },
     });
 
-    return {
+    return new UserDTO({
       id: user.id,
       email: user.email,
       password: user.password,
       role: user.role?.role || null,
-    };
+    });
   }
 
   async findByEmail(email: string): Promise<UserDTO> {
@@ -26,11 +26,11 @@ export class UsersService {
       include: { role: true },
     });
 
-    return {
+    return new UserDTO({
       id: user.id,
       email: user.email,
       password: user.password,
       role: user.role?.role || null,
-    };
+    });
   }
 }
