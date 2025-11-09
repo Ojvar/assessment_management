@@ -4,7 +4,7 @@ import { UserDTO } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async findById(id: number): Promise<UserDTO> {
     const user = await this.prisma.user.findUniqueOrThrow({

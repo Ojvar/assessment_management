@@ -20,7 +20,6 @@ export class UserDTO {
   @IsString()
   role?: string | null;
 
-
   constructor(partial: Partial<UserDTO>) {
     Object.assign(this, partial);
   }

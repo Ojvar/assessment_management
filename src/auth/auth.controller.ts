@@ -10,7 +10,7 @@ import { JwtPayload } from './types';
 @Controller('auth')
 @ApiBearerAuth()
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
   @ApiResponse({
@@ -20,7 +20,6 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
-
   login(@Body() loginDto: LoginDTO): Promise<JwtPayload> {
     return this.authService.validateUser(loginDto.email, loginDto.password);
   }
