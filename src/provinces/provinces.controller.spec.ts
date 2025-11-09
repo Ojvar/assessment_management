@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
+import { CreateProvinceDto, UpdateProvinceDto } from './dto';
 import { ProvincesController } from './provinces.controller';
 import { ProvincesService } from './provinces.service';
 
@@ -49,23 +50,23 @@ describe('ProvincesController', () => {
 
   describe('create', () => {
     it('should create a province', async () => {
-      const name = 'Tehran';
+      const dto: CreateProvinceDto = { name: 'Tehran' };
       service.create.mockResolvedValue(mockProvince);
 
-      const result = await controller.create(name);
+      const result = await controller.create(dto);
 
-      expect(service.create).toHaveBeenCalledWith(name);
+      expect(service.create).toHaveBeenCalledWith(dto);
       expect(result).toEqual(mockProvince);
     });
 
     it('should create a province with different name', async () => {
-      const name = 'Isfahan';
-      const newProvince = { id: 2, name };
+      const dto: CreateProvinceDto = { name: 'Isfahan' };
+      const newProvince = { id: 2, name: dto.name };
       service.create.mockResolvedValue(newProvince);
 
-      const result = await controller.create(name);
+      const result = await controller.create(dto);
 
-      expect(service.create).toHaveBeenCalledWith(name);
+      expect(service.create).toHaveBeenCalledWith(dto);
       expect(result).toEqual(newProvince);
     });
   });
@@ -117,25 +118,25 @@ describe('ProvincesController', () => {
   describe('update', () => {
     it('should update a province', async () => {
       const id = 1;
-      const newName = 'Tehran Updated';
-      const updatedProvince = { id, name: newName };
+      const dto: UpdateProvinceDto = { name: 'Tehran Updated' };
+      const updatedProvince = { id, name: dto.name! };
       service.update.mockResolvedValue(updatedProvince);
 
-      const result = await controller.update(id, newName);
+      const result = await controller.update(id, dto);
 
-      expect(service.update).toHaveBeenCalledWith(id, newName);
+      expect(service.update).toHaveBeenCalledWith(id, dto);
       expect(result).toEqual(updatedProvince);
     });
 
     it('should update a province with different id', async () => {
       const id = 2;
-      const newName = 'Isfahan Updated';
-      const updatedProvince = { id, name: newName };
+      const dto: UpdateProvinceDto = { name: 'Isfahan Updated' };
+      const updatedProvince = { id, name: dto.name! };
       service.update.mockResolvedValue(updatedProvince);
 
-      const result = await controller.update(id, newName);
+      const result = await controller.update(id, dto);
 
-      expect(service.update).toHaveBeenCalledWith(id, newName);
+      expect(service.update).toHaveBeenCalledWith(id, dto);
       expect(result).toEqual(updatedProvince);
     });
   });

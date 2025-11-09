@@ -5,10 +5,12 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { Province } from '@prisma/client';
+import { CreateProvinceDto, UpdateProvinceDto } from './dto';
 import { ProvincesService } from './provinces.service';
 
 @Controller('provinces')
@@ -16,30 +18,30 @@ export class ProvincesController {
   constructor(private readonly provincesService: ProvincesService) {}
 
   @Post()
-  async create(@Body('name') name: string): Promise<Province> {
-    return this.provincesService.create(name);
+  create(@Body() dto: CreateProvinceDto): Promise<Province> {
+    return this.provincesService.create(dto);
   }
 
   @Get()
-  async findAll(): Promise<Province[]> {
+  findAll(): Promise<Province[]> {
     return this.provincesService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<Province | null> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Province | null> {
     return this.provincesService.findOne(id);
   }
 
-  @Put(':id')
-  async update(
-    @Param('id') id: number,
-    @Body('name') name: string,
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateProvinceDto,
   ): Promise<Province> {
-    return this.provincesService.update(id, name);
+    return this.provincesService.update(id, dto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<Province> {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<Province> {
     return this.provincesService.remove(id);
   }
 }

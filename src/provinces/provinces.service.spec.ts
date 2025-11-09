@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateProvinceDto, UpdateProvinceDto } from './dto';
 import { ProvincesService } from './provinces.service';
 
 describe('ProvincesService', () => {
@@ -59,26 +60,26 @@ describe('ProvincesService', () => {
 
   describe('create', () => {
     it('should create a province', async () => {
-      const name = 'Tehran';
+      const dto: CreateProvinceDto = { name: 'Tehran' };
       prismaService.province.create.mockResolvedValue(mockProvince);
 
-      const result = await service.create(name);
+      const result = await service.create(dto);
 
       expect(prismaService.province.create).toHaveBeenCalledWith({
-        data: { name },
+        data: { name: dto.name },
       });
       expect(result).toEqual(mockProvince);
     });
 
     it('should create a province with different name', async () => {
-      const name = 'Isfahan';
-      const newProvince = { id: 2, name };
+      const dto: CreateProvinceDto = { name: 'Isfahan' };
+      const newProvince = { id: 2, name: dto.name };
       prismaService.province.create.mockResolvedValue(newProvince);
 
-      const result = await service.create(name);
+      const result = await service.create(dto);
 
       expect(prismaService.province.create).toHaveBeenCalledWith({
-        data: { name },
+        data: { name: dto.name },
       });
       expect(result).toEqual(newProvince);
     });
@@ -135,30 +136,30 @@ describe('ProvincesService', () => {
   describe('update', () => {
     it('should update a province', async () => {
       const id = 1;
-      const newName = 'Tehran Updated';
-      const updatedProvince = { id, name: newName };
+      const dto: UpdateProvinceDto = { name: 'Tehran Updated' };
+      const updatedProvince = { id, name: dto.name! };
       prismaService.province.update.mockResolvedValue(updatedProvince);
 
-      const result = await service.update(id, newName);
+      const result = await service.update(id, dto);
 
       expect(prismaService.province.update).toHaveBeenCalledWith({
         where: { id },
-        data: { name: newName },
+        data: dto,
       });
       expect(result).toEqual(updatedProvince);
     });
 
     it('should update a province with different id', async () => {
       const id = 2;
-      const newName = 'Isfahan Updated';
-      const updatedProvince = { id, name: newName };
+      const dto: UpdateProvinceDto = { name: 'Isfahan Updated' };
+      const updatedProvince = { id, name: dto.name! };
       prismaService.province.update.mockResolvedValue(updatedProvince);
 
-      const result = await service.update(id, newName);
+      const result = await service.update(id, dto);
 
       expect(prismaService.province.update).toHaveBeenCalledWith({
         where: { id },
-        data: { name: newName },
+        data: dto,
       });
       expect(result).toEqual(updatedProvince);
     });

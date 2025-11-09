@@ -2,15 +2,16 @@
 import { Injectable } from '@nestjs/common';
 import { Province } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateProvinceDto, UpdateProvinceDto } from './dto';
 
 @Injectable()
 export class ProvincesService {
   constructor(private prisma: PrismaService) {}
 
   // Create a province
-  async create(name: string): Promise<Province> {
+  async create(dto: CreateProvinceDto): Promise<Province> {
     return this.prisma.province.create({
-      data: { name },
+      data: { name: dto.name },
     });
   }
 
@@ -27,10 +28,10 @@ export class ProvincesService {
   }
 
   // Update a province
-  async update(id: number, name: string): Promise<Province> {
+  async update(id: number, dto: UpdateProvinceDto): Promise<Province> {
     return this.prisma.province.update({
       where: { id },
-      data: { name },
+      data: dto,
     });
   }
 
