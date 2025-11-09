@@ -10,3 +10,9 @@ export class JwtPayload {
     Object.assign(this, data);
   }
 }
+
+export interface DecodedJwtPayload {
+  email: string;
+  sub: number;
+  roleId?: number;
+}

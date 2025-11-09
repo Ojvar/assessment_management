@@ -18,7 +18,11 @@ export class AuthService {
         throwError(EnumErrorType.UnauthorizedException);
       }
 
-      const payload = { email: user.email, sub: user.id };
+      const payload = {
+        email: user.email,
+        sub: user.id,
+        roleId: user.roleId,
+      };
       const accessToken = this.jwtService.sign(payload);
 
       return new JwtPayload({
