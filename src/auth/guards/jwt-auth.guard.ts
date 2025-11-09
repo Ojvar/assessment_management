@@ -1,8 +1,9 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { EnumErrorType, throwError } from 'src/helpers/error.helper';
 import { RequestWithUser } from 'src/types/request.type';
-import { JwtPayload } from '../types';
+import { DecodedJwtPayload } from '../types';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -17,12 +18,26 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     try {
-      const decoded = this.jwtService.verify<JwtPayload>(
+      const decoded = this.jwtService.verify<DecodedJwtPayload>(
         token.replace('Bearer ', ''),
       );
       request.user = decoded;
     } catch (error: unknown) {
-      console.error(error);
+      // Check if the error is a TokenExpiredError
+      if (error instanceof TokenExpiredError) {
+        throwError(
+          EnumErrorType.JwtTokenExpired,
+          `Token expired at ${error.expiredAt.toISOString()}. Please login again.`,
+        );
+      }
+      // Check if it's any other JWT-related error
+      if (error instanceof JsonWebTokenError) {
+        throwError(
+          EnumErrorType.InavlidJwtToken,
+          `Invalid token: ${error.message}`,
+        );
+      }
+      // For any other unexpected errors, throw invalid token error
       throwError(EnumErrorType.InavlidJwtToken);
     }
 

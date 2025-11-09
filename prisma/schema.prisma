@@ -13,7 +13,18 @@ model User {
   password String
   name     String?
 
+  roleId   Int?    @map("role_id")
+  role     Role?   @relation(fields: [roleId], references: [id])
+
   @@map("users")
+}
+
+model Role {
+  id    Int     @id @default(autoincrement())
+  role  String  @unique
+  users User[]
+
+  @@map("roles")
 }
 
 model Province {
