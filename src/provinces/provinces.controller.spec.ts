@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateProvinceDto, UpdateProvinceDto } from './dto';
+import { CreateProvinceDTO, UpdateProvinceDTO } from './dto';
 import { ProvincesController } from './provinces.controller';
 import { ProvincesService } from './provinces.service';
 
@@ -50,7 +50,7 @@ describe('ProvincesController', () => {
 
   describe('create', () => {
     it('should create a province', async () => {
-      const dto: CreateProvinceDto = { name: 'Tehran' };
+      const dto: CreateProvinceDTO = { name: 'Tehran' };
       service.create.mockResolvedValue(mockProvince);
 
       const result = await controller.create(dto);
@@ -60,7 +60,7 @@ describe('ProvincesController', () => {
     });
 
     it('should create a province with different name', async () => {
-      const dto: CreateProvinceDto = { name: 'Isfahan' };
+      const dto: CreateProvinceDTO = { name: 'Isfahan' };
       const newProvince = { id: 2, name: dto.name };
       service.create.mockResolvedValue(newProvince);
 
@@ -118,7 +118,7 @@ describe('ProvincesController', () => {
   describe('update', () => {
     it('should update a province', async () => {
       const id = 1;
-      const dto: UpdateProvinceDto = { name: 'Tehran Updated' };
+      const dto: UpdateProvinceDTO = { name: 'Tehran Updated' };
       const updatedProvince = { id, name: dto.name! };
       service.update.mockResolvedValue(updatedProvince);
 
@@ -130,7 +130,7 @@ describe('ProvincesController', () => {
 
     it('should update a province with different id', async () => {
       const id = 2;
-      const dto: UpdateProvinceDto = { name: 'Isfahan Updated' };
+      const dto: UpdateProvinceDTO = { name: 'Isfahan Updated' };
       const updatedProvince = { id, name: dto.name! };
       service.update.mockResolvedValue(updatedProvince);
 

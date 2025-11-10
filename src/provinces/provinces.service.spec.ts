@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateProvinceDto, UpdateProvinceDto } from './dto';
+import { CreateProvinceDTO, UpdateProvinceDTO } from './dto';
 import { ProvincesService } from './provinces.service';
 
 describe('ProvincesService', () => {
@@ -60,7 +60,7 @@ describe('ProvincesService', () => {
 
   describe('create', () => {
     it('should create a province', async () => {
-      const dto: CreateProvinceDto = { name: 'Tehran' };
+      const dto: CreateProvinceDTO = { name: 'Tehran' };
       prismaService.province.create.mockResolvedValue(mockProvince);
 
       const result = await service.create(dto);
@@ -72,7 +72,7 @@ describe('ProvincesService', () => {
     });
 
     it('should create a province with different name', async () => {
-      const dto: CreateProvinceDto = { name: 'Isfahan' };
+      const dto: CreateProvinceDTO = { name: 'Isfahan' };
       const newProvince = { id: 2, name: dto.name };
       prismaService.province.create.mockResolvedValue(newProvince);
 
@@ -136,7 +136,7 @@ describe('ProvincesService', () => {
   describe('update', () => {
     it('should update a province', async () => {
       const id = 1;
-      const dto: UpdateProvinceDto = { name: 'Tehran Updated' };
+      const dto: UpdateProvinceDTO = { name: 'Tehran Updated' };
       const updatedProvince = { id, name: dto.name! };
       prismaService.province.update.mockResolvedValue(updatedProvince);
 
@@ -151,7 +151,7 @@ describe('ProvincesService', () => {
 
     it('should update a province with different id', async () => {
       const id = 2;
-      const dto: UpdateProvinceDto = { name: 'Isfahan Updated' };
+      const dto: UpdateProvinceDTO = { name: 'Isfahan Updated' };
       const updatedProvince = { id, name: dto.name! };
       prismaService.province.update.mockResolvedValue(updatedProvince);
 

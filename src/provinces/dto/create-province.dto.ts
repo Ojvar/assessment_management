@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateProvinceDto {
+export class CreateProvinceDTO {
   @ApiProperty({
     description: 'Name of the province',
     example: 'Tehran',
@@ -10,7 +10,7 @@ export class CreateProvinceDto {
   @IsNotEmpty()
   name: string;
 
-  constructor(partial: Partial<CreateProvinceDto>) {
+  constructor(partial: Partial<CreateProvinceDTO>) {
     Object.assign(this, partial);
   }
 }

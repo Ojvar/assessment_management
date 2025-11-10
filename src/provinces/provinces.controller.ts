@@ -10,15 +10,15 @@ import {
   Post,
 } from '@nestjs/common';
 import { Province } from '@prisma/client';
-import { CreateProvinceDto, UpdateProvinceDto } from './dto';
+import { CreateProvinceDTO, UpdateProvinceDTO } from './dto';
 import { ProvincesService } from './provinces.service';
 
 @Controller('provinces')
 export class ProvincesController {
-  constructor(private readonly provincesService: ProvincesService) {}
+  constructor(private readonly provincesService: ProvincesService) { }
 
   @Post()
-  create(@Body() dto: CreateProvinceDto): Promise<Province> {
+  create(@Body() dto: CreateProvinceDTO): Promise<Province> {
     return this.provincesService.create(dto);
   }
 
@@ -35,7 +35,7 @@ export class ProvincesController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateProvinceDto,
+    @Body() dto: UpdateProvinceDTO,
   ): Promise<Province> {
     return this.provincesService.update(id, dto);
   }

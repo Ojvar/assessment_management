@@ -1,15 +1,15 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { CreateProvinceDto } from './create-province.dto';
+import { CreateProvinceDTO } from './create-province.dto';
 
-export class UpdateProvinceDto extends PartialType(CreateProvinceDto) {
+export class UpdateProvinceDTO extends PartialType(CreateProvinceDTO) {
   @ApiPropertyOptional({
     description: 'Name of the province',
     example: 'Tehran',
   })
   name?: string;
 
-  constructor(partial: Partial<UpdateProvinceDto>) {
+  constructor(partial: Partial<UpdateProvinceDTO>) {
     super();
     Object.assign(this, partial);
   }
