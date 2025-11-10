@@ -15,7 +15,7 @@ import { ProvincesService } from './provinces.service';
 
 @Controller('provinces')
 export class ProvincesController {
-  constructor(private readonly provincesService: ProvincesService) { }
+  constructor(private readonly provincesService: ProvincesService) {}
 
   @Post()
   create(@Body() dto: CreateProvinceDTO): Promise<Province> {
