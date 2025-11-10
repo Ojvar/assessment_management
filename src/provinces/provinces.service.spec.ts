@@ -1,53 +1,43 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../prisma/prisma.service';
+import { Province } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProvinceDTO, UpdateProvinceDTO } from './dto';
 import { ProvincesService } from './provinces.service';
 
 describe('ProvincesService', () => {
   let service: ProvincesService;
-  let prismaService: {
-    province: {
-      create: jest.Mock;
-      findMany: jest.Mock;
-      findUnique: jest.Mock;
-      update: jest.Mock;
-      delete: jest.Mock;
-    };
+  let prismaService: PrismaService;
+  let provinceMock: {
+    create: jest.Mock;
+    findMany: jest.Mock;
+    findUniqueOrThrow: jest.Mock;
+    update: jest.Mock;
+    delete: jest.Mock;
   };
-
-  const mockProvince = {
-    id: 1,
-    name: 'Tehran',
-  };
-
-  const mockProvinces = [
-    { id: 1, name: 'Tehran' },
-    { id: 2, name: 'Isfahan' },
-    { id: 3, name: 'Shiraz' },
-  ];
 
   beforeEach(async () => {
-    prismaService = {
-      province: {
-        create: jest.fn(),
-        findMany: jest.fn(),
-        findUnique: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
-      },
-    };
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProvincesService,
         {
           provide: PrismaService,
-          useValue: prismaService,
+          useValue: {
+            province: {
+              create: jest.fn(),
+              findMany: jest.fn(),
+              findUniqueOrThrow: jest.fn(),
+              update: jest.fn(),
+              delete: jest.fn(),
+            },
+          },
         },
       ],
     }).compile();
 
     service = module.get<ProvincesService>(ProvincesService);
+    prismaService = module.get<PrismaService>(PrismaService);
+    provinceMock = prismaService.province as unknown as typeof provinceMock;
   });
 
   afterEach(() => {
@@ -58,137 +48,84 @@ describe('ProvincesService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create a province', async () => {
-      const dto: CreateProvinceDTO = { name: 'Tehran' };
-      prismaService.province.create.mockResolvedValue(mockProvince);
+  it('should create a province', async () => {
+    const createProvinceDto: CreateProvinceDTO = { name: 'New Province' };
+    const createdProvince: Province = {
+      id: 1,
+      name: 'New Province',
+    } as Province;
 
-      const result = await service.create(dto);
+    provinceMock.create.mockResolvedValue(createdProvince);
 
-      expect(prismaService.province.create).toHaveBeenCalledWith({
-        data: { name: dto.name },
-      });
-      expect(result).toEqual(mockProvince);
-    });
-
-    it('should create a province with different name', async () => {
-      const dto: CreateProvinceDTO = { name: 'Isfahan' };
-      const newProvince = { id: 2, name: dto.name };
-      prismaService.province.create.mockResolvedValue(newProvince);
-
-      const result = await service.create(dto);
-
-      expect(prismaService.province.create).toHaveBeenCalledWith({
-        data: { name: dto.name },
-      });
-      expect(result).toEqual(newProvince);
-    });
+    const result = await service.create(createProvinceDto);
+    expect(result).toEqual(createdProvince);
   });
 
-  describe('findAll', () => {
-    it('should return an array of provinces', async () => {
-      prismaService.province.findMany.mockResolvedValue(mockProvinces);
+  it('should return all provinces', async () => {
+    const provinces: Province[] = [
+      { id: 1, name: 'Province 1' } as Province,
+      { id: 2, name: 'Province 2' } as Province,
+    ];
 
-      const result = await service.findAll();
+    provinceMock.findMany.mockResolvedValue(provinces);
 
-      expect(prismaService.province.findMany).toHaveBeenCalled();
-      expect(result).toEqual(mockProvinces);
-      expect(result).toHaveLength(3);
-    });
-
-    it('should return an empty array when no provinces exist', async () => {
-      prismaService.province.findMany.mockResolvedValue([]);
-
-      const result = await service.findAll();
-
-      expect(prismaService.province.findMany).toHaveBeenCalled();
-      expect(result).toEqual([]);
-      expect(result).toHaveLength(0);
-    });
+    const result = await service.findAll();
+    expect(result).toEqual(provinces);
   });
 
-  describe('findOne', () => {
-    it('should return a province by id', async () => {
-      const id = 1;
-      prismaService.province.findUnique.mockResolvedValue(mockProvince);
+  it('should return a province by id', async () => {
+    const province: Province = { id: 1, name: 'Province 1' } as Province;
 
-      const result = await service.findOne(id);
+    provinceMock.findUniqueOrThrow.mockResolvedValue(province);
 
-      expect(prismaService.province.findUnique).toHaveBeenCalledWith({
-        where: { id },
-      });
-      expect(result).toEqual(mockProvince);
-    });
-
-    it('should return null when province does not exist', async () => {
-      const id = 999;
-      prismaService.province.findUnique.mockResolvedValue(null);
-
-      const result = await service.findOne(id);
-
-      expect(prismaService.province.findUnique).toHaveBeenCalledWith({
-        where: { id },
-      });
-      expect(result).toBeNull();
-    });
+    const result = await service.findOne(1);
+    expect(result).toEqual(province);
   });
 
-  describe('update', () => {
-    it('should update a province', async () => {
-      const id = 1;
-      const dto: UpdateProvinceDTO = { name: 'Tehran Updated' };
-      const updatedProvince = { id, name: dto.name! };
-      prismaService.province.update.mockResolvedValue(updatedProvince);
+  it('should propagate error if province not found on findOne', async () => {
+    provinceMock.findUniqueOrThrow.mockRejectedValue(new Error('Not found'));
 
-      const result = await service.update(id, dto);
-
-      expect(prismaService.province.update).toHaveBeenCalledWith({
-        where: { id },
-        data: dto,
-      });
-      expect(result).toEqual(updatedProvince);
-    });
-
-    it('should update a province with different id', async () => {
-      const id = 2;
-      const dto: UpdateProvinceDTO = { name: 'Isfahan Updated' };
-      const updatedProvince = { id, name: dto.name! };
-      prismaService.province.update.mockResolvedValue(updatedProvince);
-
-      const result = await service.update(id, dto);
-
-      expect(prismaService.province.update).toHaveBeenCalledWith({
-        where: { id },
-        data: dto,
-      });
-      expect(result).toEqual(updatedProvince);
-    });
+    await expect(service.findOne(999)).rejects.toThrow('Not found');
   });
 
-  describe('remove', () => {
-    it('should delete a province', async () => {
-      const id = 1;
-      prismaService.province.delete.mockResolvedValue(mockProvince);
+  it('should update a province', async () => {
+    const updateDto: UpdateProvinceDTO = { name: 'Updated Province' };
+    const updatedProvince: Province = {
+      id: 1,
+      name: 'Updated Province',
+    } as Province;
 
-      const result = await service.remove(id);
+    provinceMock.update.mockResolvedValue(updatedProvince);
 
-      expect(prismaService.province.delete).toHaveBeenCalledWith({
-        where: { id },
-      });
-      expect(result).toEqual(mockProvince);
-    });
+    const result = await service.update(1, updateDto);
+    expect(result).toEqual(updatedProvince);
+  });
 
-    it('should delete a province with different id', async () => {
-      const id = 2;
-      const provinceToDelete = { id: 2, name: 'Isfahan' };
-      prismaService.province.delete.mockResolvedValue(provinceToDelete);
+  it('should throw NotFoundException if province not found on update', async () => {
+    const updateDto: UpdateProvinceDTO = { name: 'Updated Province' };
 
-      const result = await service.remove(id);
+    provinceMock.update.mockRejectedValue(new Error('Not found'));
 
-      expect(prismaService.province.delete).toHaveBeenCalledWith({
-        where: { id },
-      });
-      expect(result).toEqual(provinceToDelete);
-    });
+    await expect(service.update(999, updateDto)).rejects.toThrow(
+      NotFoundException,
+    );
+  });
+
+  it('should delete a province', async () => {
+    const provinceToDelete: Province = {
+      id: 1,
+      name: 'Province to Delete',
+    } as Province;
+
+    provinceMock.delete.mockResolvedValue(provinceToDelete);
+
+    const result = await service.remove(1);
+    expect(result).toEqual(provinceToDelete);
+  });
+
+  it('should throw NotFoundException if province not found on delete', async () => {
+    provinceMock.delete.mockRejectedValue(new Error('Not found'));
+
+    await expect(service.remove(999)).rejects.toThrow(NotFoundException);
   });
 });

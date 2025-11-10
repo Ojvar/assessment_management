@@ -9,30 +9,88 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { Province } from '@prisma/client';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateProvinceDTO, UpdateProvinceDTO } from './dto';
+import { Province } from './entities/province.entity';
 import { ProvincesService } from './provinces.service';
 
+@ApiTags('Provinces') // Used to categorize the endpoints in Swagger UI
 @Controller('provinces')
 export class ProvincesController {
   constructor(private readonly provincesService: ProvincesService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new province' })
+  @ApiResponse({
+    status: 201,
+    description: 'Province successfully created',
+    type: Province, // You can define a DTO here as well if you need specific details
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request - Invalid input',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+  })
   create(@Body() dto: CreateProvinceDTO): Promise<Province> {
     return this.provincesService.create(dto);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all provinces' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all provinces',
+    type: [Province], // Returning an array of provinces
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+  })
   findAll(): Promise<Province[]> {
     return this.provincesService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a province by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Province details by ID',
+    type: Province, // You can define the exact type or use DTOs here as well
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Province not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+  })
   findOne(@Param('id', ParseIntPipe) id: number): Promise<Province | null> {
     return this.provincesService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update province details by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully updated the province',
+    type: Province, // Returning the updated province
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Province not found',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request - Invalid data',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+  })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateProvinceDTO,
@@ -41,6 +99,20 @@ export class ProvincesController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a province by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Province successfully deleted',
+    type: Province,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Province not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+  })
   remove(@Param('id', ParseIntPipe) id: number): Promise<Province> {
     return this.provincesService.remove(id);
   }
