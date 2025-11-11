@@ -9,7 +9,7 @@ export class UpdateProvinceDTO extends PartialType(CreateProvinceDTO) {
   })
   name?: string;
 
-  constructor(data: Partial<UpdateProvinceDTO>) {
+  constructor(data?: Partial<UpdateProvinceDTO>) {
     super();
     Object.assign(this, data);
   }

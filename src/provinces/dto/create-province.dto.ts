@@ -10,7 +10,7 @@ export class CreateProvinceDTO {
   @IsNotEmpty()
   name: string;
 
-  constructor(data: Partial<CreateProvinceDTO>) {
+  constructor(data?: Partial<CreateProvinceDTO>) {
     Object.assign(this, data);
   }
 }
