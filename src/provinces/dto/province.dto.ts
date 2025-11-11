@@ -17,7 +17,7 @@ export class ProvinceDTO {
   @IsNotEmpty()
   name: string;
 
-  constructor(partial: Partial<ProvinceDTO>) {
-    Object.assign(this, partial);
+  constructor(data: Partial<ProvinceDTO>) {
+    Object.assign(this, data);
   }
 }

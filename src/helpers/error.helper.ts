@@ -24,7 +24,7 @@ export function throwError(
     case EnumErrorType.JwtTokenExpired:
       throw new UnauthorizedException(message ?? 'Token has expired');
     case EnumErrorType.NotFoundException:
-      throw new NotFoundException(message ?? 'Province not found');
+      throw new NotFoundException(message);
     case EnumErrorType.Error:
     default:
       throw new Error(message, options);

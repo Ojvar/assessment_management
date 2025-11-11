@@ -5,7 +5,7 @@ import { CreateProvinceDTO, ProvinceDTO, UpdateProvinceDTO } from './dto';
 
 @Injectable()
 export class ProvincesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   // Create a province
   create(dto: CreateProvinceDTO): Promise<ProvinceDTO> {
@@ -49,4 +49,3 @@ export class ProvincesService {
     }
   }
 }
-
