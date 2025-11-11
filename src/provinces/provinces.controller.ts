@@ -24,7 +24,7 @@ export class ProvincesController {
   @ApiResponse({
     status: 201,
     description: 'Province successfully created',
-    type: Province, // You can define a DTO here as well if you need specific details
+    type: Province,
   })
   @ApiResponse({
     status: 400,
@@ -43,7 +43,7 @@ export class ProvincesController {
   @ApiResponse({
     status: 200,
     description: 'List of all provinces',
-    type: [Province], // Returning an array of provinces
+    type: [Province],
   })
   @ApiResponse({
     status: 500,
@@ -58,7 +58,7 @@ export class ProvincesController {
   @ApiResponse({
     status: 200,
     description: 'Province details by ID',
-    type: Province, // You can define the exact type or use DTOs here as well
+    type: Province,
   })
   @ApiResponse({
     status: 404,
@@ -68,7 +68,7 @@ export class ProvincesController {
     status: 500,
     description: 'Internal Server Error',
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Province | null> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<ProvinceDTO | null> {
     return this.provincesService.findOne(id);
   }
 
