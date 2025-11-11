@@ -10,7 +10,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateProvinceDTO, UpdateProvinceDTO } from './dto';
+import { CreateProvinceDTO, ProvinceDTO, UpdateProvinceDTO } from './dto';
 import { Province } from './entities/province.entity';
 import { ProvincesService } from './provinces.service';
 
@@ -34,7 +34,7 @@ export class ProvincesController {
     status: 500,
     description: 'Internal Server Error',
   })
-  create(@Body() dto: CreateProvinceDTO): Promise<Province> {
+  create(@Body() dto: CreateProvinceDTO): Promise<ProvinceDTO> {
     return this.provincesService.create(dto);
   }
 
@@ -49,7 +49,7 @@ export class ProvincesController {
     status: 500,
     description: 'Internal Server Error',
   })
-  findAll(): Promise<Province[]> {
+  findAll(): Promise<ProvinceDTO[]> {
     return this.provincesService.findAll();
   }
 
@@ -77,7 +77,7 @@ export class ProvincesController {
   @ApiResponse({
     status: 200,
     description: 'Successfully updated the province',
-    type: Province, // Returning the updated province
+    type: Province,
   })
   @ApiResponse({
     status: 404,
@@ -94,7 +94,7 @@ export class ProvincesController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateProvinceDTO,
-  ): Promise<Province> {
+  ): Promise<ProvinceDTO> {
     return this.provincesService.update(id, dto);
   }
 
@@ -103,7 +103,7 @@ export class ProvincesController {
   @ApiResponse({
     status: 200,
     description: 'Province successfully deleted',
-    type: Province,
+    type: ProvinceDTO,
   })
   @ApiResponse({
     status: 404,
@@ -113,7 +113,7 @@ export class ProvincesController {
     status: 500,
     description: 'Internal Server Error',
   })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<Province> {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<ProvinceDTO> {
     return this.provincesService.remove(id);
   }
 }

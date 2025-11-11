@@ -17,7 +17,6 @@ export class AuthService {
       if (user.password !== password) {
         throwError(EnumErrorType.UnauthorizedException);
       }
-
       const payload = {
         email: user.email,
         sub: user.id,
