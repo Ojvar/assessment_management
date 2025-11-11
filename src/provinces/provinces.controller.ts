@@ -1,4 +1,3 @@
-// src/provinces/provinces.controller.ts
 import {
   Body,
   Controller,
@@ -17,7 +16,7 @@ import { ProvincesService } from './provinces.service';
 @ApiTags('Provinces') // Used to categorize the endpoints in Swagger UI
 @Controller('provinces')
 export class ProvincesController {
-  constructor(private readonly provincesService: ProvincesService) {}
+  constructor(private readonly provincesService: ProvincesService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new province' })
