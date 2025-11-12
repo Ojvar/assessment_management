@@ -1,0 +1,28 @@
+---
+alwaysApply: true
+---
+
+# Use Bun.js as default runtime & package manager
+
+rules:
+  - "Default to Bun as the JavaScript runtime."
+  - "Use `bun install` instead of npm/yarn/pnpm."
+  - "Use `bun run <script>` for scripts."
+  - "Use `bun test` when writing or running tests."
+  - "When generating server code, use Bun APIs instead of Node APIs unless user requests otherwise."
+  - "Generated package.json scripts should use bun, not npm."
+  - "Prefer the Bun stdlib (fetch, WebSocket, file I/O) when possible."
+  - "Avoid Node-specific imports (fs, path, http) unless necessary; suggest `import { file } from 'bun'` equivalents."
+  - "When suggesting dependencies, ensure they work with Bun."
+  - "When writing Dockerfiles, base images should support Bun."
+  - "If user code references Node-only modules, automatically suggest Bun alternatives."
+  - "Use `bunx <package>` instead of `npx <package>` for running binaries."
+
+project_prompts:
+  - title: "Use Bun everywhere"
+    description: "This is a Bun-based project. Always use Bun commands and runtime."
+    examples:
+      - "run dev server using `bun run dev`"
+      - "install deps using `bun install`"
+      - "run package binaries using `bunx <package>`"
+      - "write scripts for Bun, not Node"

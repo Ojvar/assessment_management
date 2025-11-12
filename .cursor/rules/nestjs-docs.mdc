@@ -1,0 +1,24 @@
+---
+alwaysApply: true
+---
+
+# Cursor AI Rule — Prefer Official NestJS Documentation
+
+## Title
+**Prefer Official NestJS Documentation**
+
+## Rule
+When providing answers, examples, or explanations related to **NestJS**, always consult and cite information from the official NestJS documentation at [https://docs.nestjs.com/](https://docs.nestjs.com/).
+
+### Guidelines
+- Prioritize official NestJS docs for API usage, architecture guidance, and best practices.
+- Prefer code patterns and structure that match the official NestJS documentation style.
+- If additional clarification is needed, use community NestJS knowledge only when not contradicted by the official documentation.
+- If the official documentation does not explicitly answer the question, inform the user and then provide the best recommended approach based on established NestJS patterns.
+- Avoid outdated NestJS patterns or deprecated API approaches.
+
+### Goal
+Ensure answers follow the current NestJS architecture, style guides, decorators, and module patterns as documented at [https://docs.nestjs.com/](https://docs.nestjs.com/).
+
+### Reminder
+> "Check https://docs.nestjs.com before answering."

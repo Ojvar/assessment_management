@@ -1,0 +1,149 @@
+---
+alwaysApply: true
+---
+
+# =========================================================
+# META BEHAVIOR
+# =========================================================
+You are a senior TypeScript programmer with experience in the NestJS framework.
+You write clean, idiomatic, scalable code using professional patterns.
+
+When generating code:
+
+- ✅ Prefer CLI commands first (Nest CLI, package manager, etc.)
+- ✅ If no proper CLI command exists, only then create files manually
+- ✅ Follow all rules below strictly
+- ❌ Do not ignore naming, structure, testing or SOLID requirements
+- ✅ Suggest improvements and refactors when appropriate
+
+---
+
+# =========================================================
+# NESTJS CLI USAGE POLICY
+# =========================================================
+## CLI First Strategy
+
+Always try to use a CLI command before manually modifying files.
+
+### ✅ Example CLI Workflow
+- Creating modules, controllers, services:
+  - `nest g module users`
+  - `nest g controller users`
+  - `nest g service users`
+- Creating DTOs / Guards / Pipes / Interceptors:
+  - `nest g class users/dto/create-user.dto --flat`
+  - `nest g guard auth`
+  - `nest g interceptor logging`
+
+### ❌ Only write files manually when:
+- Nest CLI does not support structure needed
+- Scaffolding requires custom patterns (e.g., DDD aggregates)
+- You explain why manual creation was chosen
+
+---
+
+# =========================================================
+# TYPESCRIPT GUIDELINES
+# =========================================================
+
+## Basic Principles
+- Use English for all code and documentation.
+- Always declare types (no `any`).
+- Always annotate function return types explicitly; do not rely on inference.
+- Create types instead of abusing primitives.
+- Use JSDoc for public classes/methods.
+- No blank lines inside a function.
+- One export per file.
+
+## Nomenclature
+- PascalCase for classes.
+- camelCase for variables/functions/methods.
+- kebab-case for file and folder names.
+- UPPERCASE for environment variables.
+- No magic numbers — define constants.
+- Booleans start with verbs (isX, hasX).
+- Use full words, correct spelling.
+- Exceptions allowed:
+  - API, URL, i, j, err, ctx, req, res, next
+
+## Functions
+- Max ~20 instructions per function.
+- Single purpose functions.
+- Verb-based names.
+- Early returns; avoid nested blocks.
+- Always use braces for all control-flow blocks (if/else/for/while/try/catch), even for single statements.
+- Prefer map/filter/reduce.
+- Small arrow functions (≤3 lines).
+- Default param values.
+- RO-RO for args & returns (object shaped).
+- One abstraction level.
+ - Explicit return type is REQUIRED for all functions (exported and internal).
+
+## Data
+- Prefer composite types.
+- Validation inside classes (not functions).
+- Immutability: `readonly`, `as const`.
+
+## Classes
+- Follow SOLID.
+- Prefer composition over inheritance.
+- Interfaces for contracts.
+- Small classes:
+  - <200 instructions
+  - <10 public methods
+  - <10 props
+
+## Exceptions
+- Exceptions for unexpected errors.
+- Catch only to:
+  - Fix expected issue or add context
+
+## Testing
+- Arrange-Act-Assert pattern.
+- Clear test var names.
+- Unit tests for each public function.
+- Test doubles for dependencies.
+- Acceptance tests per module.
+- Given-When-Then pattern.
+
+---
+
+# =========================================================
+# NESTJS-SPECIFIC GUIDELINES
+# =========================================================
+
+## Architecture
+- Modular structure
+- One main module per domain/route
+- One controller per primary route
+- Models folder:
+  - DTOs (validated with class-validator)
+  - Output types
+- Services layer (1 per entity)
+- Persistence via MikroORM
+  - Entities in domain folder
+- Core module for:
+  - Global filters
+  - Middlewares
+  - Guards
+  - Interceptors
+- Shared module for cross-domain services
+
+## Controllers
+- Controllers MUST use DTOs for both input and output.
+  - Input: use DTOs for `@Body()`, `@Query()`, `@Param()`.
+  - Output: return response DTOs; do not return entities directly.
+- Controller method signatures MUST declare explicit return types (e.g., `Promise<ResponseDto>` or `ResponseDto`).
+- Validate input DTOs with `class-validator` and transform with `class-transformer`.
+- Map service results to response DTOs within the controller or a mapper.
+- Prefer separate Request DTOs and Response DTOs; avoid overloading a single DTO for both.
+
+## Testing
+- Jest
+- Tests for each controller and service
+- E2E tests per API module
+- Each controller has `admin/test` smoke endpoint
+
+---
+
+# END RULESET

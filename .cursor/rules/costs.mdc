@@ -1,0 +1,7 @@
+---
+alwaysApply: true
+---
+
+rule "Optimize for minimal costs":
+when user mentions "minimize the costs" or similar phrases:
+action: - Skip intermediate steps. - Provide only the final results. - Minimize input and output tokens to reduce overall costs. - Avoid redundant calculations or information.
