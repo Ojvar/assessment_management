@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { City } from '@prisma/client';
+import { EnumErrorType, throwError } from 'src/helpers/error.helper';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateCityDTO, UpdateCityDTO } from './dto';
+import { CityDTO, CreateCityDTO, UpdateCityDTO } from './dto';
 
 @Injectable()
 export class CitiesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   create(dto: CreateCityDTO): Promise<City> {
     return this.prisma.city.create({
@@ -13,11 +14,11 @@ export class CitiesService {
     });
   }
 
-  findAll(): Promise<City[]> {
+  findAll(): Promise<CityDTO[]> {
     return this.prisma.city.findMany();
   }
 
-  async findOne(id: number): Promise<City> {
+  async findOne(id: number): Promise<CityDTO> {
     const city = await this.prisma.city.findUnique({
       where: { id },
     });
@@ -25,24 +26,24 @@ export class CitiesService {
     return city;
   }
 
-  async update(id: number, dto: UpdateCityDTO): Promise<City> {
+  async update(id: number, dto: UpdateCityDTO): Promise<CityDTO> {
     try {
       return await this.prisma.city.update({
         where: { id },
         data: dto,
       });
     } catch {
-      throw new NotFoundException(`City with ID ${id} not found`);
+      throwError(EnumErrorType.NotFoundException)
     }
   }
 
-  async remove(id: number): Promise<City> {
+  async remove(id: number): Promise<CityDTO> {
     try {
       return await this.prisma.city.delete({
         where: { id },
       });
     } catch {
-      throw new NotFoundException(`City with ID ${id} not found`);
+      throwError(EnumErrorType.NotFoundException)
     }
   }
 }
