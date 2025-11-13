@@ -6,7 +6,6 @@ import { CreateCityDTO, UpdateCityDTO } from './dto';
 
 describe('CitiesService', () => {
   let service: CitiesService;
-  let prisma: PrismaService;
 
   const mockCity: City = {
     id: 1,
@@ -33,7 +32,6 @@ describe('CitiesService', () => {
     }).compile();
 
     service = module.get<CitiesService>(CitiesService);
-    prisma = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
@@ -43,26 +41,28 @@ describe('CitiesService', () => {
   it('should create a city', async () => {
     const dto: CreateCityDTO = { name: 'Tehran', provinceId: 1 };
     const result = await service.create(dto);
-    expect(prisma.city.create).toHaveBeenCalledWith({ data: dto });
+    expect(mockPrisma.city.create).toHaveBeenCalledWith({ data: dto });
     expect(result).toEqual(mockCity);
   });
 
   it('should return all cities', async () => {
     const result = await service.findAll();
-    expect(prisma.city.findMany).toHaveBeenCalled();
+    expect(mockPrisma.city.findMany).toHaveBeenCalled();
     expect(result).toEqual([mockCity]);
   });
 
   it('should return a city by id', async () => {
     const result = await service.findOne(1);
-    expect(prisma.city.findUnique).toHaveBeenCalledWith({ where: { id: 1 } });
+    expect(mockPrisma.city.findUnique).toHaveBeenCalledWith({
+      where: { id: 1 },
+    });
     expect(result).toEqual(mockCity);
   });
 
   it('should update a city', async () => {
     const dto: UpdateCityDTO = { name: 'Tehran Updated', provinceId: 1 };
     const result = await service.update(1, dto);
-    expect(prisma.city.update).toHaveBeenCalledWith({
+    expect(mockPrisma.city.update).toHaveBeenCalledWith({
       where: { id: 1 },
       data: dto,
     });
@@ -71,7 +71,7 @@ describe('CitiesService', () => {
 
   it('should remove a city', async () => {
     const result = await service.remove(1);
-    expect(prisma.city.delete).toHaveBeenCalledWith({ where: { id: 1 } });
+    expect(mockPrisma.city.delete).toHaveBeenCalledWith({ where: { id: 1 } });
     expect(result).toEqual(mockCity);
   });
 });
