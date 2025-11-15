@@ -9,7 +9,6 @@ export class PaginationQueryDTO {
     @Type(() => Number)
     @IsInt()
     @Min(1)
-    @Max(10)
     page?: number = 1;
 
     @ApiPropertyOptional({ description: 'Items per page', default: 100 })
@@ -17,7 +16,7 @@ export class PaginationQueryDTO {
     @Type(() => Number)
     @IsInt()
     @Min(1)
-    @Max(10)
+    @Max(100)
     limit?: number = 100;
 
     @ApiPropertyOptional({ description: 'Search by name' })
