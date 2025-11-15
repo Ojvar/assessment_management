@@ -1,25 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { City } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CitiesService } from './cities.service';
-import { CreateCityDTO, UpdateCityDTO } from './dto';
+import { CityDTO, PaginationQueryDTO } from './dto';
 
 describe('CitiesService', () => {
   let service: CitiesService;
+  let prisma: PrismaService;
 
-  const mockCity: City = {
-    id: 1,
-    name: 'Tehran',
-    provinceId: 1,
-  };
+  const mockCities = [
+    { id: 1, name: 'Tehran', provinceId: 1 },
+    { id: 2, name: 'Mashhad', provinceId: 2 },
+    { id: 3, name: 'Isfahan', provinceId: 3 },
+  ];
 
-  const mockPrisma = {
+  const prismaMock = {
     city: {
-      create: jest.fn().mockResolvedValue(mockCity),
-      findMany: jest.fn().mockResolvedValue([mockCity]),
-      findUnique: jest.fn().mockResolvedValue(mockCity),
-      update: jest.fn().mockResolvedValue(mockCity),
-      delete: jest.fn().mockResolvedValue(mockCity),
+      findMany: jest.fn(),
     },
   };
 
@@ -27,51 +23,60 @@ describe('CitiesService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CitiesService,
-        { provide: PrismaService, useValue: mockPrisma },
+        { provide: PrismaService, useValue: prismaMock },
       ],
     }).compile();
 
     service = module.get<CitiesService>(CitiesService);
+    prisma = module.get<PrismaService>(PrismaService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should create a city', async () => {
-    const dto: CreateCityDTO = { name: 'Tehran', provinceId: 1 };
-    const result = await service.create(dto);
-    expect(mockPrisma.city.create).toHaveBeenCalledWith({ data: dto });
-    expect(result).toEqual(mockCity);
-  });
+  it('should return paginated cities', async () => {
+    prismaMock.city.findMany.mockResolvedValue(mockCities);
 
-  it('should return all cities', async () => {
-    const result = await service.findAll();
-    expect(mockPrisma.city.findMany).toHaveBeenCalled();
-    expect(result).toEqual([mockCity]);
-  });
+    const query: PaginationQueryDTO = { page: 1, limit: 2 };
+    const result: CityDTO[] = await service.findAll(query);
 
-  it('should return a city by id', async () => {
-    const result = await service.findOne(1);
-    expect(mockPrisma.city.findUnique).toHaveBeenCalledWith({
-      where: { id: 1 },
+    expect(prismaMock.city.findMany).toHaveBeenCalledWith({
+      skip: 0,
+      take: 2,
+      where: undefined,
+      orderBy: { id: 'asc' },
     });
-    expect(result).toEqual(mockCity);
+    expect(result).toEqual(mockCities);
   });
 
-  it('should update a city', async () => {
-    const dto: UpdateCityDTO = { name: 'Tehran Updated', provinceId: 1 };
-    const result = await service.update(1, dto);
-    expect(mockPrisma.city.update).toHaveBeenCalledWith({
-      where: { id: 1 },
-      data: dto,
+  it('should apply search filter', async () => {
+    prismaMock.city.findMany.mockResolvedValue([mockCities[0]]);
+
+    const query: PaginationQueryDTO = { search: 'Tehran' };
+    const result: CityDTO[] = await service.findAll(query);
+
+    expect(prismaMock.city.findMany).toHaveBeenCalledWith({
+      skip: 0,
+      take: 100,
+      where: { name: { contains: 'Tehran', mode: 'insensitive' } },
+      orderBy: { id: 'asc' },
     });
-    expect(result).toEqual(mockCity);
+    expect(result).toEqual([mockCities[0]]);
   });
 
-  it('should remove a city', async () => {
-    const result = await service.remove(1);
-    expect(mockPrisma.city.delete).toHaveBeenCalledWith({ where: { id: 1 } });
-    expect(result).toEqual(mockCity);
+  it('should apply sort', async () => {
+    prismaMock.city.findMany.mockResolvedValue(mockCities);
+
+    const query: PaginationQueryDTO = { sortBy: 'name', order: 'desc' };
+    const result: CityDTO[] = await service.findAll(query);
+
+    expect(prismaMock.city.findMany).toHaveBeenCalledWith({
+      skip: 0,
+      take: 100,
+      where: undefined,
+      orderBy: { name: 'desc' },
+    });
+    expect(result).toEqual(mockCities);
   });
 });

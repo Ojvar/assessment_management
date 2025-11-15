@@ -2,11 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { City } from '@prisma/client';
 import { EnumErrorType, throwError } from 'src/helpers/error.helper';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CityDTO, CreateCityDTO, UpdateCityDTO } from './dto';
+import {
+  CityDTO,
+  CreateCityDTO,
+  PaginationQueryDTO,
+  UpdateCityDTO,
+} from './dto';
 
 @Injectable()
 export class CitiesService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   create(dto: CreateCityDTO): Promise<City> {
     return this.prisma.city.create({
@@ -14,8 +19,33 @@ export class CitiesService {
     });
   }
 
-  findAll(): Promise<CityDTO[]> {
-    return this.prisma.city.findMany();
+  async findAll(query: PaginationQueryDTO): Promise<CityDTO[]> {
+    const {
+      page = 1,
+      limit = 100,
+      search,
+      sortBy = 'id',
+      order = 'asc',
+    } = query;
+
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const cities = await this.prisma.city.findMany({
+      skip,
+      take: limitNumber,
+      where: search
+        ? { name: { contains: search, mode: 'insensitive' } }
+        : undefined,
+      orderBy: { [sortBy]: order },
+    });
+
+    return cities.map((city) => ({
+      id: city.id,
+      name: city.name,
+      provinceId: city.provinceId,
+    }));
   }
 
   async findOne(id: number): Promise<CityDTO> {
@@ -33,7 +63,7 @@ export class CitiesService {
         data: dto,
       });
     } catch {
-      throwError(EnumErrorType.NotFoundException)
+      throwError(EnumErrorType.NotFoundException);
     }
   }
 
@@ -43,7 +73,7 @@ export class CitiesService {
         where: { id },
       });
     } catch {
-      throwError(EnumErrorType.NotFoundException)
+      throwError(EnumErrorType.NotFoundException);
     }
   }
 }

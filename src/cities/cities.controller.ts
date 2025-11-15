@@ -7,16 +7,22 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CitiesService } from './cities.service';
-import { CityDTO, CreateCityDTO, UpdateCityDTO } from './dto';
+import {
+  CityDTO,
+  CreateCityDTO,
+  PaginationQueryDTO,
+  UpdateCityDTO,
+} from './dto';
 import { City } from './entities/city.entity';
 
 @ApiTags('Cities')
 @Controller('cities')
 export class CitiesController {
-  constructor(private readonly citiesService: CitiesService) { }
+  constructor(private readonly citiesService: CitiesService) {}
 
   @Post()
   @ApiResponse({ status: 201, description: 'City created', type: City })
@@ -25,9 +31,14 @@ export class CitiesController {
   }
 
   @Get()
-  @ApiResponse({ status: 200, description: 'List all cities', type: [City] })
-  findAll(): Promise<CityDTO[]> {
-    return this.citiesService.findAll();
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 100 })
+  @ApiOkResponse({
+    description: 'List of cities with pagination',
+    type: [CityDTO],
+  })
+  findAll(@Query() query: PaginationQueryDTO) {
+    return this.citiesService.findAll(query);
   }
 
   @Get(':id')
@@ -43,7 +54,7 @@ export class CitiesController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateCityDTO,
-  ): Promise<City> {
+  ): Promise<CityDTO> {
     return this.citiesService.update(id, dto);
   }
 
