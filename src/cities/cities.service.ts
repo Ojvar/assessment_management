@@ -11,7 +11,7 @@ import {
 
 @Injectable()
 export class CitiesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   create(dto: CreateCityDTO): Promise<City> {
     return this.prisma.city.create({
