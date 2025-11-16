@@ -7,6 +7,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { AssessmentModule } from './assessment/assessment.module';
 import { ProvincesModule } from './provinces/provinces.module';
+import { CitiesModule } from './cities/cities.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ProvincesModule } from './provinces/provinces.module';
     AuthModule,
     AssessmentModule,
     ProvincesModule,
+    CitiesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EnumErrorType, throwError } from 'src/helpers/error.helper';
+import { EnumErrorType, throwError } from 'src/helpers';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProvinceDTO, ProvinceDTO, UpdateProvinceDTO } from './dto';
 

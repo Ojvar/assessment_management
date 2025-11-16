@@ -1,1 +1,1 @@
-export class Province { }
+export class Province {}
