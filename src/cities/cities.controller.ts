@@ -17,15 +17,14 @@ import {
   PaginationQueryDTO,
   UpdateCityDTO,
 } from './dto';
-import { City } from './entities/city.entity';
 
 @ApiTags('Cities')
 @Controller('cities')
 export class CitiesController {
-  constructor(private readonly citiesService: CitiesService) {}
+  constructor(private readonly citiesService: CitiesService) { }
 
   @Post()
-  @ApiResponse({ status: 201, description: 'City created', type: City })
+  @ApiResponse({ status: 201, description: 'City created', type: CityDTO })
   create(@Body() dto: CreateCityDTO): Promise<CityDTO> {
     return this.citiesService.create(dto);
   }
@@ -42,14 +41,14 @@ export class CitiesController {
   }
 
   @Get(':id')
-  @ApiResponse({ status: 200, description: 'City found', type: City })
+  @ApiResponse({ status: 200, description: 'City found', type: CityDTO })
   @ApiResponse({ status: 404, description: 'City not found' })
   findOne(@Param('id', ParseIntPipe) id: number): Promise<CityDTO> {
     return this.citiesService.findOne(id);
   }
 
   @Patch(':id')
-  @ApiResponse({ status: 200, description: 'City updated', type: City })
+  @ApiResponse({ status: 200, description: 'City updated', type: CityDTO })
   @ApiResponse({ status: 404, description: 'City not found' })
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -59,7 +58,7 @@ export class CitiesController {
   }
 
   @Delete(':id')
-  @ApiResponse({ status: 200, description: 'City deleted', type: City })
+  @ApiResponse({ status: 200, description: 'City deleted', type: CityDTO })
   @ApiResponse({ status: 404, description: 'City not found' })
   remove(@Param('id', ParseIntPipe) id: number): Promise<CityDTO> {
     return this.citiesService.remove(id);
