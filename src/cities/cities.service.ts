@@ -41,11 +41,14 @@ export class CitiesService {
       orderBy: { [sortBy]: order },
     });
 
-    return cities.map((city) => ({
-      id: city.id,
-      name: city.name,
-      provinceId: city.provinceId,
-    }));
+    return cities.map(
+      (city) =>
+        new CityDTO({
+          name: city.name,
+          provinceId: city.provinceId,
+        }),
+    );
+
   }
 
   async findOne(id: number): Promise<CityDTO> {

@@ -10,4 +10,8 @@ export class CityDTO {
   @ApiProperty({ description: 'Province ID' })
   @IsNumber()
   provinceId: number;
+
+  constructor(data?: Partial<CityDTO>) {
+    Object.assign(this, data);
+  }
 }

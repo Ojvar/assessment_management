@@ -1,4 +1,3 @@
-// src/cities/dto/pagination-query.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
@@ -37,4 +36,10 @@ export class PaginationQueryDTO {
     @IsOptional()
     @IsIn(['asc', 'desc'])
     order?: 'asc' | 'desc' = 'asc';
+
+
+
+    constructor(data?: Partial<PaginationQueryDTO>) {
+        Object.assign(this, data);
+    }
 }
