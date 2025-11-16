@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
   CityDTO,
@@ -44,6 +44,11 @@ export class CitiesService {
 
     return cities.map((c) => new CityDTO(c));
 
+    // return cities.map(city => new CityDto({
+    //   id: city.id,
+    //   name: city.name,
+    //   provinceId: city.provinceId,
+    // }));
   }
 
   async findOne(id: number): Promise<CityDTO> {
@@ -52,22 +57,34 @@ export class CitiesService {
     return new CityDTO(city);
   }
 
-
-
   async update(id: number, dto: UpdateCityDTO): Promise<CityDTO> {
-    const city = await this.prisma.city.update({
-      where: { id },
-      data: dto,
-    });
+    try {
+      const city = await this.prisma.city.update({
+        where: { id },
+        data: dto,
+      });
 
-    return new CityDTO(city);
+      return new CityDTO(city);
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`City with id ${id} not found`);
+      }
+      throw error;
+    }
   }
 
   async remove(id: number): Promise<CityDTO> {
-    const city = await this.prisma.city.delete({
-      where: { id },
-    });
+    try {
+      const city = await this.prisma.city.delete({
+        where: { id },
+      });
 
-    return new CityDTO(city);
+      return new CityDTO(city);
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`City with id ${id} not found`);
+      }
+      throw error;
+    }
   }
 }

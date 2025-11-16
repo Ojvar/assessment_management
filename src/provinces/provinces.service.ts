@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { EnumErrorType, throwError } from 'src/helpers/error.helper';
+import { EnumErrorType, throwError } from 'src/helpers';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProvinceDTO, ProvinceDTO, UpdateProvinceDTO } from './dto';
 
 @Injectable()
 export class ProvincesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   // Create a province
   create(dto: CreateProvinceDTO): Promise<ProvinceDTO> {
